@@ -4,7 +4,7 @@ CXXFLAGS := -Wall -std=c++20
 # Contain path for any includes (headers)
 # Depending on your platform: Include a path to boost, on linux should be 
 # /usr/local/include, on mac could be /opt/homebrew/include
-INCLUDES := -I./include -I/opt/homebrew/include 
+INCLUDES := -I./include -I/opt/homebrew/include
 
 # Contains libraries we need to (-L is directory search path, -l is lib)
 LDFLAGS = -L/usr/local/lib -L/opt/homebrew/lib 

@@ -24,8 +24,31 @@ void Player::setY(int a) {
     y = a;
 };
 
-GameModel::GameModel()
-    : player(height, width/2 ) {
+
+Alien::Alien()
+{
+};
+
+int Alien::getX() {
+    return x;
+};
+
+int Alien::getY() {
+    return y;
+};
+
+void Alien::setX(int a) {
+    x = a;
+};
+
+void Alien::setY(int a) {
+    y = a;
+};
+
+
+GameModel::GameModel() : player(height, width/2)
+{
+    createAliens();
 };
 
 // Example function - used for simple unit tests
@@ -40,9 +63,36 @@ int GameModel::getGameWidth() {
 int GameModel::getGameHeight() {
     return height; 
 };
+
+int GameModel::getScore() {
+    return score;
+};
+
+int GameModel::getLevel() {
+    return level;
+};
     
 Player& GameModel::getPlayer() {
     return player; 
+};
+
+Alien** GameModel::getAliens() {
+    return aliens;
+};
+
+void GameModel::createAliens() {
+    Alien** table = new Alien*[6];
+
+    for(int i = 0; i < 6; i++) {
+        table[i] = new Alien[12];
+        for(int j = 0; j < 12; j++) {
+            table[i][j] = Alien();
+            aliens[i][j].setX(j * 4 + 1);
+            aliens[i][j].setY(i * 2 + 2);
+        }
+    }
+
+    aliens = table;
 };
 
 void GameModel::control_player(wchar_t ch)

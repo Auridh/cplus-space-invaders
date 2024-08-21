@@ -20,18 +20,19 @@ void ConsoleView::update() {
 
     // Example for building the game view
     for(int i = 0; i < model->getGameWidth(); i++) {
-        mvaddch(0, i, wallTexture);
+        mvaddch(3, i, wallTexture);
     }
-    for(int i = 0; i < model->getGameHeight(); i++) {
+    for(int i = 3; i < model->getGameHeight(); i++) {
         mvaddch(i, 0, wallTexture);
         mvaddch(i, model->getGameWidth() - 1, wallTexture);
     }
 
     // Show points of player
-    mvprintw(1, model->getGameWidth() / 2 / 2, "%i", 0);
+    mvprintw(1, model->getGameWidth() / 2 / 2, "Score: %i  Level: %i", model->getScore(), model->getLevel());
 
     // Draw different objects. 
     drawPlayer(model->getPlayer().getY(), model->getPlayer().getX());
+    drawAliens();
 };
 
 void ConsoleView::setup_view() {
@@ -45,5 +46,18 @@ void ConsoleView::setup_view() {
 };
 
 void ConsoleView::drawPlayer(int y, int x) {
-    mvaddch(y-1, x, 'P');
+    mvaddch(y-1, x, 'A');
+};
+
+void ConsoleView::drawAlien(int y, int x) {
+    mvaddch(y-1, x, 'Y');
+};
+
+void ConsoleView::drawAliens() {
+    Alien** aliens = model->getAliens();
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 12; j++) {
+            // drawAlien(aliens[i][j].getY(), aliens[i][j].getX());
+        }
+    }
 };

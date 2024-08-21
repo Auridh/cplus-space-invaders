@@ -17,6 +17,10 @@ public:
 
     void drawPlayer(int y, int x);  // Function to draw the player
 
+    void drawAlien(int y, int x);   // Function to draw an alien
+
+    void drawAliens();   // Function to draw all aliens
+
 private:
     // Textures
     char wallTexture = 'X';  // Wall texture character
