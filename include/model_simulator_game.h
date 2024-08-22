@@ -33,7 +33,7 @@ public:
     int getGameHeight(); // returns the game's height
     Player& getPlayer(); // returns reference to player object
     int getLevel();
-    Alien** getAliens();
+    Alien*** getAliens();
     int getScore();
 
     void simulate_game_step(); // simulates one step of the game
@@ -43,6 +43,7 @@ public:
     void increaseScore(int value);
     void nextLevel();
     void createAliens();
+    void moveAliens(int step);
 
 private:
     int width = 40; // game width
@@ -50,8 +51,9 @@ private:
     int dir = 1; // ball direction
     int level = 1;
     int score = 0;
+    int time = 0;
     Player player; // player object
-    Alien** aliens;
+    Alien*** aliens;
 };
 
 #endif // end of header file

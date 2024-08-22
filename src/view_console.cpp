@@ -54,10 +54,11 @@ void ConsoleView::drawAlien(int y, int x) {
 };
 
 void ConsoleView::drawAliens() {
-    Alien** aliens = model->getAliens();
+    Alien*** aliens = model->getAliens();
     for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 12; j++) {
-            // drawAlien(aliens[i][j].getY(), aliens[i][j].getX());
+        for (int j = 0; j < 9; j++) {
+            if (aliens[i][j])
+                drawAlien(aliens[i][j]->getY(), aliens[i][j]->getX());
         }
     }
 };
