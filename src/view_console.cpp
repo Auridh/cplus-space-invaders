@@ -36,6 +36,16 @@ void ConsoleView::setupView() {
     nodelay(window, TRUE);
     keypad(window, TRUE);
 
+    if (has_colors()) {
+        use_default_colors();
+        start_color();
+        init_pair(1, COLOR_WHITE, -1);
+        init_pair(2, COLOR_BLUE, -1);
+        init_pair(3, COLOR_RED, -1);
+        init_pair(4, COLOR_YELLOW, -1);
+        init_pair(5, COLOR_GREEN, -1);
+    }
+
     timeout(30);
 }
 
@@ -44,9 +54,11 @@ void ConsoleView::draw() {
     mvwprintw(window, 1, model->getGameWidth() / 2 / 2, "Score: %i  Level: %i", model->getScore(), model->getLevel());
 
     // Draw different objects.
+    wattron(window, COLOR_PAIR(2));
     drawPlayer(model->getPlayer());
-    drawAliens();
     drawProjectiles();
+    wattroff(window, COLOR_PAIR(2));
+    drawAliens();
     drawExplosions();
 };
 
@@ -80,13 +92,19 @@ void ConsoleView::drawProjectiles() {
 void ConsoleView::drawExplosion(Explosion *e) {
     switch (e->getExplosionState()) {
         case 1:
+            wattron(window, COLOR_PAIR(2));
             mvwaddch(window, e->getY()-1, e->getX(), '*');
+            wattroff(window, COLOR_PAIR(2));
             break;
         case 2:
+            wattron(window, COLOR_PAIR(3));
             mvwaddch(window, e->getY()-1, e->getX(), '#');
+            wattroff(window, COLOR_PAIR(3));
             break;
         case 3:
+            wattron(window, COLOR_PAIR(4));
             mvwaddch(window, e->getY()-1, e->getX(), '@');
+            wattroff(window, COLOR_PAIR(4));
             break;
         default:
             break;
