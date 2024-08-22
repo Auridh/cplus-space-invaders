@@ -25,6 +25,19 @@ private:
     int x, y; // player's coordinates and height
 };
 
+class Explosion {
+public:
+    Explosion(int x, int y); // constructor that takes in initial x and y coordinates of player
+    int getX();
+    int getY();
+    int getExplosionState();
+
+    void increaseExplosionState();
+private:
+    int x, y; // player's coordinates and height
+    int explosionState = 0;
+};
+
 class Projectile {
 public:
     Projectile(int x, int y, int velocity); // constructor that takes in initial x and y coordinates of player
@@ -46,9 +59,10 @@ public:
     int getGameHeight(); // returns the game's height
     Player& getPlayer(); // returns reference to player object
     int getLevel();
-    Alien*** getAliens();
+    std::vector<std::vector<Alien*>>* getAliens();
     int getScore();
     std::vector<Projectile*> getProjectiles();
+    std::vector<Explosion*> getExplosions();
 
     void simulate_game_step(); // simulates one step of the game
     void control_player(wchar_t ch); // updates player movement direction based on keyboard input
@@ -60,6 +74,14 @@ public:
     void moveAliens(int step);
     void moveProjectiles();
     void addProjectile(Projectile* projectile);
+    void checkCollisions();
+    void deleteProjectile(Projectile* projectile);
+    void projectileHit(Projectile* projectile);
+    void addExplosion(Explosion* explosion);
+    void removeExplosion(Explosion* explosion);
+    void updateExplosions();
+    void deleteAlien(Alien* alien);
+    void alienHit(Alien* alien);
 
 private:
     int width = 40; // game width
@@ -69,8 +91,9 @@ private:
     int score = 0;
     int time = 0;
     Player player; // player object
-    Alien*** aliens;
+    std::vector<std::vector<Alien*>> aliens = {};
     std::vector<Projectile*> projectiles = {};
+    std::vector<Explosion*> explosions = {};
 };
 
 #endif // end of header file

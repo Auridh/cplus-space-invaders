@@ -46,6 +46,27 @@ void Alien::setY(int a) {
     y = a;
 };
 
+Explosion::Explosion(int x, int y) : x(x), y(y)
+{
+};
+
+int Explosion::getX() {
+    return x;
+};
+
+int Explosion::getY() {
+    return y;
+};
+
+int Explosion::getExplosionState() {
+    return explosionState;
+}
+
+void Explosion::increaseExplosionState() {
+    explosionState++;
+}
+
+
 
 
 Projectile::Projectile(int x, int y, int velocity) : x(x), y(y), velocity(velocity)
@@ -109,25 +130,29 @@ Player& GameModel::getPlayer() {
     return player; 
 };
 
-Alien*** GameModel::getAliens() {
-    return aliens;
+std::vector<std::vector<Alien*>>* GameModel::getAliens() {
+    return &aliens;
 };
 
-void GameModel::createAliens() {
-    Alien*** table = new Alien**[6]();
+void GameModel::increaseScore(int value) {
+    score += value;
+}
 
+
+void GameModel::createAliens() {
     for(int i = 0; i < 6; i++) {
-        table[i] = new Alien*[9]();
+        std::vector<Alien*> row = {};
         bool uneven = i % 2 == 0;
 
         for(int j = 0; j < (uneven ? 9 : 8); j++) {
-            table[i][j] = new Alien();
-            table[i][j]->setX(j * 4 + (uneven ? 2 : 4));
-            table[i][j]->setY(i * 2 + 6);
+            auto alien = new Alien();
+            alien->setX(j * 4 + (uneven ? 2 : 4));
+            alien->setY(i * 2 + 6);
+            row.push_back(alien);
         }
-    }
 
-    aliens = table;
+        aliens.push_back(row);
+    }
 };
 
 void GameModel::control_player(wchar_t ch)
@@ -148,20 +173,20 @@ void GameModel::control_player(wchar_t ch)
 
 void GameModel::moveAliens(int step)
 {
-    for (int i = 0; i < 6; i++) {
-        for (int j = 0; j < 9; j++) {
-            if (!aliens[i][j])
+    for (auto & alienRow : aliens) {
+        for (auto & alien : alienRow) {
+            if (!alien)
                 continue;
             if (step == 0 || step == 4 || step == 8) {
-                aliens[i][j]->setY(aliens[i][j]->getY() + 1);
+                alien->setY(alien->getY() + 1);
                 continue;
             }
             if (step <= 3) {
-                aliens[i][j]->setX(aliens[i][j]->getX() + 1);
+                alien->setX(alien->getX() + 1);
                 continue;
             }
             if (step <= 7) {
-                aliens[i][j]->setX(aliens[i][j]->getX() - 1);
+                alien->setX(alien->getX() - 1);
             }
         }
     }
@@ -185,9 +210,108 @@ void GameModel::moveProjectiles()
         projectile->setY(projectile->getY() + projectile->getVelocity());
     }
     for (auto & projectile : toRemove) {
-        std::erase(projectiles, projectile);
+        projectileHit(projectile);
     }
 }
+
+void GameModel::checkCollisions() {
+    std::vector<Alien*> toRemoveAliens = {};
+    std::vector<Projectile*> toRemoveProjectiles = {};
+    std::vector<Projectile*> toRemoveProjectilesAlienProjectileCase = {};
+
+    for (auto & projectile : projectiles) {
+        // Projektile vom Spieler
+        if (projectile->getVelocity() == -1) {
+            // Trifft es ein Alien?
+            for (auto & alienRow : aliens) {
+                for (auto & alien : alienRow) {
+                    if(alien
+                        && alien->getX() == projectile->getX()
+                        && alien->getY() == projectile->getY()) {
+                        toRemoveProjectiles.push_back(projectile);
+                        toRemoveAliens.push_back(alien);
+                    }
+                }
+            }
+            // Trifft es ein Projektil von einem Alien?
+            for (auto & projectileAlien : projectiles) {
+                if(projectileAlien->getVelocity() != -1
+                            && (projectileAlien->getY() == projectile->getY() || projectileAlien->getY() + 1 == projectile->getY())
+                            && projectileAlien->getX() == projectile->getX()) {
+                    toRemoveProjectilesAlienProjectileCase.push_back(projectile);
+                    toRemoveProjectilesAlienProjectileCase.push_back(projectileAlien);
+                }
+            }
+        } else {
+            // Projektile vom Alien
+            // TODO:
+        }
+    }
+    for (auto & alien : toRemoveAliens) {
+        alienHit(alien);
+    }
+    for (auto & projectile : toRemoveProjectiles) {
+        deleteProjectile(projectile);
+    }
+    for (auto & projectile : toRemoveProjectilesAlienProjectileCase) {
+        projectileHit(projectile);
+    }
+}
+
+void GameModel::projectileHit(Projectile *projectile) {
+    addExplosion(new Explosion(projectile->getX(), projectile->getY()));
+    deleteProjectile(projectile);
+}
+
+
+void GameModel::deleteProjectile(Projectile *projectile) {
+    if(!projectile) return;
+    std::erase(projectiles, projectile);
+    delete projectile;
+}
+
+std::vector<Explosion *> GameModel::getExplosions() {
+    return explosions;
+}
+
+void GameModel::addExplosion(Explosion *explosion) {
+    explosions.push_back(explosion);
+}
+
+void GameModel::removeExplosion(Explosion *explosion) {
+    if(!explosion) return;
+    std::erase(explosions, explosion);
+    delete explosion;
+}
+
+void GameModel::updateExplosions() {
+    std::vector<Explosion*> toRemove = {};
+
+    for (auto & explosion : explosions) {
+        explosion->increaseExplosionState();
+        if(explosion->getExplosionState() == 4) {
+            toRemove.push_back(explosion);
+        }
+    }
+    for (auto & explosion : toRemove) {
+        removeExplosion(explosion);
+    }
+}
+
+void GameModel::deleteAlien(Alien *alien) {
+    if(!alien) return;
+    for (auto & alienRow : aliens) {
+        std::erase(alienRow, alien);
+    }
+    delete alien;
+}
+
+void GameModel::alienHit(Alien *alien) {
+    addExplosion(new Explosion(alien->getX(), alien->getY()));
+    deleteAlien(alien);
+}
+
+
 
 
 void GameModel::simulate_game_step()
@@ -197,6 +321,8 @@ void GameModel::simulate_game_step()
     notifyUpdate();
 
     moveProjectiles();
+    checkCollisions();
+    updateExplosions();
 
     if (time % 40 == 0) {
         moveAliens(time / 40);

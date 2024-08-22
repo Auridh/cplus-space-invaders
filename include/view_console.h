@@ -17,13 +17,17 @@ public:
 
     void drawPlayer(int y, int x);  // Function to draw the player
 
-    void drawAlien(int y, int x);   // Function to draw an alien
+    void drawAlien(Alien* alien);   // Function to draw an alien
 
     void drawAliens();   // Function to draw all aliens
 
     void drawProjectiles();
 
     void drawProjectile(Projectile* p);
+
+    void drawExplosion(Explosion* e);
+
+    void drawExplosions();
 
 private:
     // Textures

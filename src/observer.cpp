@@ -6,7 +6,7 @@ void Observable::addObserver(Observer* observer) {
 };
 
 void Observable::notifyUpdate() {
-	for (auto& observer : observers){
+	for (auto& observer : observers) {
 		observer->update();
 	}
 };
