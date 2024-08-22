@@ -21,6 +21,10 @@ public:
 
     void drawAliens();   // Function to draw all aliens
 
+    void drawProjectiles();
+
+    void drawProjectile(Projectile* p);
+
 private:
     // Textures
     char wallTexture = 'X';  // Wall texture character

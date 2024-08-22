@@ -11,7 +11,7 @@ public:
     void setX(int a);
     void setY(int a);
 private:
-    int x, y, height; // player's coordinates and height
+    int x, y; // player's coordinates and height
 };
 
 class Alien {
@@ -22,7 +22,20 @@ public:
     void setX(int a);
     void setY(int a);
 private:
-    int x, y, height; // player's coordinates and height
+    int x, y; // player's coordinates and height
+};
+
+class Projectile {
+public:
+    Projectile(int x, int y, int velocity); // constructor that takes in initial x and y coordinates of player
+    int getX();
+    int getY();
+    int getVelocity();
+    void setX(int a);
+    void setY(int a);
+    void setVelocity(int value);
+private:
+    int x, y, velocity; // player's coordinates and height
 };
 
 class GameModel : public Observable { // Game class inherits from Observable class
@@ -35,6 +48,7 @@ public:
     int getLevel();
     Alien*** getAliens();
     int getScore();
+    std::vector<Projectile*> getProjectiles();
 
     void simulate_game_step(); // simulates one step of the game
     void control_player(wchar_t ch); // updates player movement direction based on keyboard input
@@ -44,6 +58,8 @@ public:
     void nextLevel();
     void createAliens();
     void moveAliens(int step);
+    void moveProjectiles();
+    void addProjectile(Projectile* projectile);
 
 private:
     int width = 40; // game width
@@ -54,6 +70,7 @@ private:
     int time = 0;
     Player player; // player object
     Alien*** aliens;
+    std::vector<Projectile*> projectiles = {};
 };
 
 #endif // end of header file

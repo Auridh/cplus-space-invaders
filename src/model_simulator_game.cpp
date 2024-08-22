@@ -1,6 +1,7 @@
 #include "model_simulator_game.h"
 #include <ncurses.h>
 #include <stdlib.h>
+#include <bits/algorithmfwd.h>
 
 Player::Player(int y, int x)
 {
@@ -46,6 +47,33 @@ void Alien::setY(int a) {
 };
 
 
+
+Projectile::Projectile(int x, int y, int velocity) : x(x), y(y), velocity(velocity)
+{
+
+};
+
+int Projectile::getX() {
+    return x;
+};
+
+int Projectile::getY() {
+    return y;
+};
+
+int Projectile::getVelocity() {
+    return velocity;
+};
+
+void Projectile::setX(int a) {
+    x = a;
+};
+
+void Projectile::setY(int a) {
+    y = a;
+};
+
+
 GameModel::GameModel() : player(height, width/2)
 {
     createAliens();
@@ -67,6 +95,11 @@ int GameModel::getGameHeight() {
 int GameModel::getScore() {
     return score;
 };
+
+std::vector<Projectile*> GameModel::getProjectiles() {
+    return projectiles;
+}
+
 
 int GameModel::getLevel() {
     return level;
@@ -107,6 +140,10 @@ void GameModel::control_player(wchar_t ch)
     {
         player.setX(player.getX() + 1);
     }
+    if (ch==' ')
+    {
+        addProjectile(new Projectile(player.getX(), player.getY()-1, -1));
+    }
 };
 
 void GameModel::moveAliens(int step)
@@ -130,11 +167,36 @@ void GameModel::moveAliens(int step)
     }
 }
 
+void GameModel::addProjectile(Projectile* projectile)
+{
+    projectiles.push_back(projectile);
+}
+
+
+void GameModel::moveProjectiles()
+{
+    std::vector<Projectile*> toRemove = {};
+
+    for (auto & projectile : projectiles) {
+        if (projectile->getY() <= 5 || projectile->getY() >= 30) {
+            toRemove.push_back(projectile);
+            continue;
+        }
+        projectile->setY(projectile->getY() + projectile->getVelocity());
+    }
+    for (auto & projectile : toRemove) {
+        std::erase(projectiles, projectile);
+    }
+}
+
+
 void GameModel::simulate_game_step()
 {
     time++;
     // Implement game dynamics.
     notifyUpdate();
+
+    moveProjectiles();
 
     if (time % 40 == 0) {
         moveAliens(time / 40);
@@ -142,4 +204,4 @@ void GameModel::simulate_game_step()
             time = 0;
         }
     }
-};
+}

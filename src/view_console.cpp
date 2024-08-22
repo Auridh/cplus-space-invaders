@@ -33,6 +33,7 @@ void ConsoleView::update() {
     // Draw different objects. 
     drawPlayer(model->getPlayer().getY(), model->getPlayer().getX());
     drawAliens();
+    drawProjectiles();
 };
 
 void ConsoleView::setup_view() {
@@ -53,6 +54,11 @@ void ConsoleView::drawAlien(int y, int x) {
     mvaddch(y-1, x, 'Y');
 };
 
+void ConsoleView::drawProjectile(Projectile* p) {
+    mvaddch(p->getY()-1, p->getX(), '.');
+}
+
+
 void ConsoleView::drawAliens() {
     Alien*** aliens = model->getAliens();
     for (int i = 0; i < 6; i++) {
@@ -62,3 +68,9 @@ void ConsoleView::drawAliens() {
         }
     }
 };
+
+void ConsoleView::drawProjectiles() {
+    for (auto & projectile : model->getProjectiles()) {
+        drawProjectile(projectile);
+    }
+}
