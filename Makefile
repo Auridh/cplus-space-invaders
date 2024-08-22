@@ -28,5 +28,5 @@ test_call.o: $(TESTDIR)/test_call.cpp
 
 clean:
 	test ! -f game || rm game
-	test ! -f tests || rm tests
+	test ! -f test || rm "test"
 	rm -f *.o
