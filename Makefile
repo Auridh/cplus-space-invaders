@@ -11,18 +11,22 @@ LDFLAGS = -L/usr/local/lib -L/opt/homebrew/lib
 LDLIBS = -lncurses -lboost_unit_test_framework
 
 SRCDIR := ./src
+TESTDIR := ./tests
 GAME_OBJECTS := controller_console.o model_simulator_game.o observer.o view_console.o
 
 game: $(GAME_OBJECTS) main.o
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 
-tests: $(GAME_OBJECTS) test_call.o
+test: $(GAME_OBJECTS) test_call.o
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-    
+
+test_call.o: $(TESTDIR)/test_call.cpp
+	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $^ -o $@
+
 %.o: $(SRCDIR)/%.cpp
 	$(CXX) $(INCLUDES) $(CXXFLAGS) -c $^ -o $@
 
 clean:
 	test ! -f game || rm game
 	test ! -f tests || rm tests
-	rm *.o
+	rm -f *.o
