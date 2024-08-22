@@ -1,90 +1,92 @@
 #include "view_console.h"
 #include <ncurses.h>
-#include <stdlib.h>
 
-
-ConsoleView::ConsoleView(GameModel* model) {
-	setup_view();
-	this->model = model;
-	this->model->addObserver(this);
+ConsoleView::ConsoleView(GameModel *model) {
+    this->model = model;
+    this->model->addObserver(this);
+    setupView();
 };
 
 ConsoleView::~ConsoleView() {
+    delwin(window);
     endwin();
 };
 
 void ConsoleView::update() {
     // libncurses standard loop calls
-    erase();
-    refresh();
+    werase(window);
+    box(window, 0, 0);
+    wmove(window, 3, 1);
+    whline(window, ACS_HLINE, model->getGameWidth()-2);
+    draw();
+}
 
-    // Example for building the game view
-    for(int i = 0; i < model->getGameWidth(); i++) {
-        mvaddch(3, i, wallTexture);
-    }
-    for(int i = 3; i < model->getGameHeight(); i++) {
-        mvaddch(i, 0, wallTexture);
-        mvaddch(i, model->getGameWidth() - 1, wallTexture);
-    }
-
-    // Show points of player
-    mvprintw(1, model->getGameWidth() / 2 / 2, "Score: %i  Level: %i", model->getScore(), model->getLevel());
-
-    // Draw different objects. 
-    drawPlayer(model->getPlayer().getY(), model->getPlayer().getX());
-    drawAliens();
-    drawProjectiles();
-    drawExplosions();
+WINDOW * ConsoleView::getWindow() {
+    return window;
 };
 
-void ConsoleView::setup_view() {
+void ConsoleView::setupView() {
     // Init ncurses
     initscr();
     cbreak();
     noecho();
     curs_set(0);
-    keypad(stdscr, TRUE);
+
+    window = newwin(model->getGameHeight(), model->getGameWidth(), 0, 0);
+    nodelay(window, TRUE);
+    keypad(window, TRUE);
+
     timeout(30);
+}
+
+void ConsoleView::draw() {
+    // Show points of player
+    mvwprintw(window, 1, model->getGameWidth() / 2 / 2, "Score: %i  Level: %i", model->getScore(), model->getLevel());
+
+    // Draw different objects.
+    drawPlayer(model->getPlayer());
+    drawAliens();
+    drawProjectiles();
+    drawExplosions();
 };
 
-void ConsoleView::drawPlayer(int y, int x) {
-    mvaddch(y-1, x, 'A');
+void ConsoleView::drawPlayer(Player* p) {
+    mvwaddch(window, p->getY()-1, p->getX(), 'A');
 };
 
-void ConsoleView::drawAlien(Alien* a) {
-    mvaddch(a->getY()-1, a->getX(), 'Y');
+void ConsoleView::drawAlien(Alien *a) {
+    mvwaddch(window, a->getY()-1, a->getX(), 'Y');
 };
 
-void ConsoleView::drawProjectile(Projectile* p) {
-    mvaddch(p->getY()-1, p->getX(), '.');
+void ConsoleView::drawProjectile(Projectile *p) {
+    mvwaddch(window, p->getY()-1, p->getX(), '.');
 }
 
 
 void ConsoleView::drawAliens() {
-    for (auto & alienRow : *model->getAliens()) {
-        for (auto & alien : alienRow) {
+    for (auto &alienRow: *model->getAliens()) {
+        for (auto &alien: alienRow) {
             drawAlien(alien);
         }
     }
 };
 
 void ConsoleView::drawProjectiles() {
-    for (auto & projectile : model->getProjectiles()) {
+    for (auto &projectile: model->getProjectiles()) {
         drawProjectile(projectile);
     }
 }
 
-void ConsoleView::drawExplosion(Explosion* e) {
-    switch (e->getExplosionState())
-    {
+void ConsoleView::drawExplosion(Explosion *e) {
+    switch (e->getExplosionState()) {
         case 1:
-            mvaddch(e->getY()-1, e->getX(), '*');
+            mvwaddch(window, e->getY()-1, e->getX(), '*');
             break;
         case 2:
-            mvaddch(e->getY()-1, e->getX(), '#');
+            mvwaddch(window, e->getY()-1, e->getX(), '#');
             break;
         case 3:
-            mvaddch(e->getY()-1, e->getX(), '@');
+            mvwaddch(window, e->getY()-1, e->getX(), '@');
             break;
         default:
             break;
@@ -92,10 +94,7 @@ void ConsoleView::drawExplosion(Explosion* e) {
 }
 
 void ConsoleView::drawExplosions() {
-    for (auto & explosion : model->getExplosions()) {
+    for (auto &explosion: model->getExplosions()) {
         drawExplosion(explosion);
     }
 }
-
-
-

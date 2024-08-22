@@ -2,7 +2,7 @@
 #define CONTROLLER_GAME_H_
 
 #include "model_simulator_game.h" // include the Game Model header file
-#include <ncurses.h> // include the ncurses library for console input/output
+#include "view_console.h"
 
 class Controller
 {
@@ -14,9 +14,10 @@ public:
 class ConsoleController : public Controller // derive ConsoleController class from the Controller base class
 {
     GameModel* model; // pointer to the GameModel object
+    ConsoleView* view;
 
 public:
-    ConsoleController(GameModel* model); // constructor that takes a GameModel pointer as parameter
+    ConsoleController(GameModel* model, ConsoleView* view); // constructor that takes a GameModel pointer as parameter
 
     wchar_t getInput(); // override the getInput() function to get input from the console
 };

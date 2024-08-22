@@ -1,37 +1,37 @@
-#pragma once  // #pragma once directive added to avoid multiple inclusions of header files
+// #pragma once directive added to avoid multiple inclusions of header files
+#pragma once
 
-#include "observer.h"  // Include Observer header file
-#include "model_simulator_game.h"  // Include GameModel header file
 #include <ncurses.h>
+#include "observer.h"
+#include "model_simulator_game.h"
 
-class ConsoleView : public Observer  // Inheriting from Observer class
+// Inheriting from Observer class
+class ConsoleView : public Observer
 {
-    GameModel* model;  // Pointer variable of GameModel class
+    // Pointer variable of GameModel class
+    GameModel* model;
 
-public:
-    ConsoleView(GameModel* model);  // Constructor of ConsoleView class
+    // Wall texture character
+    char wallTexture = 'X';
+    // Window
+    WINDOW* window;
 
-    virtual ~ConsoleView();  // Virtual destructor of ConsoleView class
+    void setupView();
+    void draw();
 
-    void update();  // Function to update the screen
-
-    void drawPlayer(int y, int x);  // Function to draw the player
-
-    void drawAlien(Alien* alien);   // Function to draw an alien
-
-    void drawAliens();   // Function to draw all aliens
-
+    void drawPlayer(Player* player);
+    void drawAlien(Alien* alien);
+    void drawAliens();
     void drawProjectiles();
-
     void drawProjectile(Projectile* p);
-
     void drawExplosion(Explosion* e);
-
     void drawExplosions();
 
-private:
-    // Textures
-    char wallTexture = 'X';  // Wall texture character
+public:
+    ConsoleView(GameModel* model);
+    virtual ~ConsoleView();
 
-    void setup_view();  // Function to set up the view
+    void update();
+
+    WINDOW* getWindow();
 };

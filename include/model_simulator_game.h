@@ -57,7 +57,7 @@ public:
 
     int getGameWidth(); // returns the game's width
     int getGameHeight(); // returns the game's height
-    Player& getPlayer(); // returns reference to player object
+    Player* getPlayer(); // returns reference to player object
     int getLevel();
     std::vector<std::vector<Alien*>>* getAliens();
     int getScore();

@@ -1,6 +1,5 @@
 #include "model_simulator_game.h"
 #include <ncurses.h>
-#include <stdlib.h>
 #include <bits/algorithmfwd.h>
 
 Player::Player(int y, int x)
@@ -95,7 +94,7 @@ void Projectile::setY(int a) {
 };
 
 
-GameModel::GameModel() : player(height, width/2)
+GameModel::GameModel() : player(height-1, width/2)
 {
     createAliens();
 };
@@ -126,8 +125,8 @@ int GameModel::getLevel() {
     return level;
 };
     
-Player& GameModel::getPlayer() {
-    return player; 
+Player* GameModel::getPlayer() {
+    return &player;
 };
 
 std::vector<std::vector<Alien*>>* GameModel::getAliens() {
@@ -310,9 +309,6 @@ void GameModel::alienHit(Alien *alien) {
     addExplosion(new Explosion(alien->getX(), alien->getY()));
     deleteAlien(alien);
 }
-
-
-
 
 void GameModel::simulate_game_step()
 {
