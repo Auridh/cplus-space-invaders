@@ -1,99 +1,126 @@
-#ifndef MODEL_GAME_H_ // header guard to prevent multiple inclusions of the same header file
+// header guard to prevent multiple inclusions of the same header file
+#ifndef MODEL_GAME_H_
 #define MODEL_GAME_H_
 
-#include "observer.h" // include header file for the Observable class
+// include header file for the Observable class
+#include "observer.h"
 
-class Player {
+// Super class vor all game objects
+class Drawable {
 public:
-    Player(int x, int y); // constructor that takes in initial x and y coordinates of player
-    int getX();
-    int getY();
-    void setX(int a);
-    void setY(int a);
+    Drawable() = default;
+    Drawable(int x, int y);
+    virtual ~Drawable() = default;
+    virtual int getX();
+    virtual int getY();
+    virtual int getColor();
+    virtual wchar_t getTexture();
+    void setX(int x);
+    void setY(int y);
 private:
-    int x, y; // player's coordinates and height
+    int x = 0, y = 0;
+    wchar_t texture = ' ';
+    int color = 1;
 };
 
-class Alien {
+class Player : public Drawable {
+    using Drawable::Drawable;
+    wchar_t texture = 'A';
+    int color = 2;
 public:
-    Alien(); // constructor that takes in initial x and y coordinates of player
-    int getX();
-    int getY();
-    void setX(int a);
-    void setY(int a);
-private:
-    int x, y; // player's coordinates and height
+    int getColor() override;
+    wchar_t getTexture() override;
 };
 
-class Explosion {
+class Alien : public Drawable {
+    using Drawable::Drawable;
+    wchar_t texture = 'Y';
+    int color = 1;
 public:
-    Explosion(int x, int y); // constructor that takes in initial x and y coordinates of player
-    int getX();
-    int getY();
-    int getExplosionState();
+    int getColor() override;
+    wchar_t getTexture() override;
+};
 
+class Explosion : public Drawable {
+    using Drawable::Drawable;
+    wchar_t texture = '*';
+    short state = 0;
+    int color = 2;
+public:
+    int getColor() override;
+    wchar_t getTexture() override;
+    short getExplosionState();
     void increaseExplosionState();
-private:
-    int x, y; // player's coordinates and height
-    int explosionState = 0;
 };
 
-class Projectile {
+class Projectile : public Drawable {
+    using Drawable::Drawable;
+    int velocity = 1;
+    wchar_t texture = '.';
+    int color = 2;
 public:
-    Projectile(int x, int y, int velocity); // constructor that takes in initial x and y coordinates of player
-    int getX();
-    int getY();
+    Projectile(int x, int y, int velocity);
     int getVelocity();
-    void setX(int a);
-    void setY(int a);
+    int getColor() override;
+    wchar_t getTexture() override;
     void setVelocity(int value);
-private:
-    int x, y, velocity; // player's coordinates and height
 };
 
-class GameModel : public Observable { // Game class inherits from Observable class
-public:
-    GameModel(); // constructor
 
-    int getGameWidth(); // returns the game's width
-    int getGameHeight(); // returns the game's height
-    Player* getPlayer(); // returns reference to player object
+// Game class inherits from Observable class
+class GameModel : public Observable {
+public:
+    GameModel();
+
+    int getGameWidth();
+    int getGameHeight();
     int getLevel();
-    std::vector<std::vector<Alien*>>* getAliens();
     int getScore();
+
+    Player* getPlayer();
+    std::vector<std::vector<Alien*>>* getAliens();
     std::vector<Projectile*> getProjectiles();
     std::vector<Explosion*> getExplosions();
 
-    void simulate_game_step(); // simulates one step of the game
-    void control_player(wchar_t ch); // updates player movement direction based on keyboard input
-
-    int addOne(int input_value); // Example function - used for simple unit tests
-    void increaseScore(int value);
-    void nextLevel();
+    // create all aliens according to the current level
     void createAliens();
-    void moveAliens(int step);
-    void moveProjectiles();
+    // add objects to the game world
     void addProjectile(Projectile* projectile);
-    void checkCollisions();
-    void deleteProjectile(Projectile* projectile);
-    void projectileHit(Projectile* projectile);
     void addExplosion(Explosion* explosion);
-    void removeExplosion(Explosion* explosion);
-    void updateExplosions();
-    void deleteAlien(Alien* alien);
-    void alienHit(Alien* alien);
+
+    // control meta information
+    void increaseScore(int value);
+    void increaseLevel();
+
+    // updates player movement direction based on keyboard input
+    void control_player(wchar_t ch);
+    // simulates one step of the game
+    void simulate_game_step();
 
 private:
-    int width = 40; // game width
-    int height = 27; // game height
-    int dir = 1; // ball direction
-    int level = 1;
-    int score = 0;
-    int time = 0;
-    Player player; // player object
+    // game width and height
+    int width = 40, height = 27;
+    int level = 1, score = 0;
+    // time measurement
+    int ticks = 0;
+
+    // game objects
+    Player player;
     std::vector<std::vector<Alien*>> aliens = {};
     std::vector<Projectile*> projectiles = {};
     std::vector<Explosion*> explosions = {};
+
+    // update game objects
+    void updateAliens(int step);
+    void updateProjectiles();
+    void updateExplosions();
+    void hitAlien(Alien* alien);
+    void hitProjectile(Projectile* projectile);
+    void deleteAlien(Alien* alien);
+    void deleteProjectile(Projectile* projectile);
+    void deleteExplosion(Explosion* explosion);
+    // check for object collisions
+    void checkCollisions();
 };
 
-#endif // end of header file
+#endif

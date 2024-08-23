@@ -54,65 +54,40 @@ void ConsoleView::draw() {
     mvwprintw(window, 1, model->getGameWidth() / 2 / 2, "Score: %i  Level: %i", model->getScore(), model->getLevel());
 
     // Draw different objects.
-    wattron(window, COLOR_PAIR(2));
-    drawPlayer(model->getPlayer());
-    drawProjectiles();
-    wattroff(window, COLOR_PAIR(2));
-    drawAliens();
-    drawExplosions();
+    drawObject(model->getPlayer());
+    drawObjects(model->getAliens());
+    drawObjects(model->getProjectiles());
+    drawObjects(model->getExplosions());
 };
 
-void ConsoleView::drawPlayer(Player* p) {
-    mvwaddch(window, p->getY()-1, p->getX(), 'A');
-};
-
-void ConsoleView::drawAlien(Alien *a) {
-    mvwaddch(window, a->getY()-1, a->getX(), 'Y');
-};
-
-void ConsoleView::drawProjectile(Projectile *p) {
-    mvwaddch(window, p->getY()-1, p->getX(), '.');
+void ConsoleView::drawObject(Drawable* drawable) {
+    wattron(
+        window,
+        COLOR_PAIR(drawable->getColor()));
+    mvwaddch(
+        window,
+        drawable->getY()-1,
+        drawable->getX(),
+        drawable->getTexture());
+    wattroff(
+        window,
+        COLOR_PAIR(drawable->getColor()));
 }
 
-
-void ConsoleView::drawAliens() {
-    for (auto &alienRow: *model->getAliens()) {
-        for (auto &alien: alienRow) {
-            drawAlien(alien);
-        }
-    }
-};
-
-void ConsoleView::drawProjectiles() {
-    for (auto &projectile: model->getProjectiles()) {
-        drawProjectile(projectile);
+template<class T>
+void ConsoleView::drawObjects(const std::vector<T*>& drawables)
+requires (std::is_base_of_v<Drawable, T>)
+{
+    for (auto &drawable: drawables) {
+        drawObject(drawable);
     }
 }
 
-void ConsoleView::drawExplosion(Explosion *e) {
-    switch (e->getExplosionState()) {
-        case 1:
-            wattron(window, COLOR_PAIR(2));
-            mvwaddch(window, e->getY()-1, e->getX(), '*');
-            wattroff(window, COLOR_PAIR(2));
-            break;
-        case 2:
-            wattron(window, COLOR_PAIR(3));
-            mvwaddch(window, e->getY()-1, e->getX(), '#');
-            wattroff(window, COLOR_PAIR(3));
-            break;
-        case 3:
-            wattron(window, COLOR_PAIR(4));
-            mvwaddch(window, e->getY()-1, e->getX(), '@');
-            wattroff(window, COLOR_PAIR(4));
-            break;
-        default:
-            break;
-    }
-}
-
-void ConsoleView::drawExplosions() {
-    for (auto &explosion: model->getExplosions()) {
-        drawExplosion(explosion);
+template<class T>
+void ConsoleView::drawObjects(std::vector<std::vector<T*>>* drawables)
+requires (std::is_base_of_v<Drawable, T>)
+{
+    for (auto &row: *drawables) {
+        drawObjects(row);
     }
 }

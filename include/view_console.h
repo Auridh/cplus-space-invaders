@@ -19,19 +19,17 @@ class ConsoleView : public Observer
     void setupView();
     void draw();
 
-    void drawPlayer(Player* player);
-    void drawAlien(Alien* alien);
-    void drawAliens();
-    void drawProjectiles();
-    void drawProjectile(Projectile* p);
-    void drawExplosion(Explosion* e);
-    void drawExplosions();
+    void drawObject(Drawable* drawable);
+    template<class T> void drawObjects(const std::vector<T*>& drawables)
+        requires(std::is_base_of_v<Drawable, T>);
+    template<class T> void drawObjects(std::vector<std::vector<T*>>* drawables)
+        requires(std::is_base_of_v<Drawable, T>);
 
 public:
-    ConsoleView(GameModel* model);
-    virtual ~ConsoleView();
+    explicit ConsoleView(GameModel* model);
+    ~ConsoleView() override;
 
-    void update();
+    void update() override;
 
     WINDOW* getWindow();
 };

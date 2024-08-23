@@ -7,6 +7,7 @@
 class Controller
 {
 public:
+    virtual ~Controller() = default;
     // You should consider how to keep this as general as possible. And should set the type accordingly.
     virtual wchar_t getInput() = 0; // declare a pure virtual function for getting user input
 };
@@ -19,7 +20,7 @@ class ConsoleController : public Controller // derive ConsoleController class fr
 public:
     ConsoleController(GameModel* model, ConsoleView* view); // constructor that takes a GameModel pointer as parameter
 
-    wchar_t getInput(); // override the getInput() function to get input from the console
+    wchar_t getInput() override; // override the getInput() function to get input from the console
 };
 
-#endif  // end of header guard
+#endif

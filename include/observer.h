@@ -6,6 +6,7 @@
 class Observer // define the Observer class
 {
 public:
+    virtual ~Observer() = default;
     virtual void update() = 0; // declare a pure virtual function called update(), which will be implemented by derived classes
 };
 
@@ -19,4 +20,4 @@ public:
     void notifyUpdate(); // public function to notify all registered observers that an update has occurred
 };
 
-#endif // end of header guard and file
+#endif
