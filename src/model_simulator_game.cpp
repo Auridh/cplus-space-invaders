@@ -33,6 +33,16 @@ int Player::getColor() {
 wchar_t Player::getTexture() {
     return texture;
 }
+
+int Player::getHealth() {
+    return health;
+}
+
+void Player::decreaseHealth() {
+    health--;
+}
+
+
 // Alien implementation
 int Alien::getColor() {
     return color;
@@ -173,7 +183,7 @@ void GameModel::control_player(wchar_t ch)
             new Projectile(
                 player.getX(),
                 player.getY()-1,
-                -1));
+                -2));
     }
 };
 
@@ -223,11 +233,14 @@ void GameModel::updateProjectiles()
     std::vector<Projectile*> toRemove = {};
 
     for (auto & projectile : projectiles) {
+        if (ticks % projectile->getVelocity() == 0) {
+            continue;
+        }
         if (projectile->getY() <= 5 || projectile->getY() >= 30) {
             toRemove.push_back(projectile);
             continue;
         }
-        projectile->setY(projectile->getY() + projectile->getVelocity());
+        projectile->setY(projectile->getY() + (projectile->getVelocity() > 0 ? 1 : -1));
     }
     for (auto & projectile : toRemove) {
         hitProjectile(projectile);
@@ -286,7 +299,7 @@ void GameModel::checkCollisions() {
 
     for (auto & projectile : projectiles) {
         // Projektile vom Spieler
-        if (projectile->getVelocity() == -1) {
+        if (projectile->getVelocity() < 0) {
             // Trifft es ein Alien?
             for (auto & alienRow : aliens) {
                 for (auto & alien : alienRow) {
@@ -300,7 +313,7 @@ void GameModel::checkCollisions() {
             }
             // Trifft es ein Projektil von einem Alien?
             for (auto & projectileAlien : projectiles) {
-                if(projectileAlien->getVelocity() != -1
+                if(projectileAlien->getVelocity() > 0
                             && (projectileAlien->getY() == projectile->getY() || projectileAlien->getY() + 1 == projectile->getY())
                             && projectileAlien->getX() == projectile->getX()) {
                     toRemoveProjectilesAlienProjectileCase.push_back(projectile);

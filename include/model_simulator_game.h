@@ -27,9 +27,12 @@ class Player : public Drawable {
     using Drawable::Drawable;
     wchar_t texture = 'A';
     int color = 5;
+    int health = 3;
 public:
     int getColor() override;
     wchar_t getTexture() override;
+    int getHealth();
+    void decreaseHealth();
 };
 
 class Alien : public Drawable {
@@ -55,7 +58,7 @@ public:
 
 class Projectile : public Drawable {
     using Drawable::Drawable;
-    int velocity = 1;
+    int velocity = 10;
     wchar_t texture = '.';
     int color = 5;
 public:
