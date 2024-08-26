@@ -50,6 +50,10 @@ void Player::resetHealth() {
     health = 3;
 }
 
+void Player::kill() {
+    health = 0;
+}
+
 
 // Alien implementation
 int Alien::getColor() {
@@ -288,6 +292,10 @@ void GameModel::updateAliens()
             if (ticks % 80 == 0) {
                 if (step == 0 || step == 4 || step == 8) {
                     aliens[i][j]->setY(aliens[i][j]->getY() + 1);
+                    if(aliens[i][j]->getY() >= 26) {
+                        gameOver();
+                        return;
+                    }
                     continue;
                 }
                 if (step <= 3) {
@@ -424,6 +432,8 @@ void GameModel::startNextLevel() {
 }
 
 void GameModel::gameOver() {
+    player.kill();
+
     for (auto & alienRow : aliens) {
         for (auto & alien : alienRow) {
             deleteAlien(alien);

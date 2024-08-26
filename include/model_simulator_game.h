@@ -34,6 +34,7 @@ public:
     int getHealth();
     void decreaseHealth();
     void resetHealth();
+    void kill();
 };
 
 class Alien : public Drawable {
