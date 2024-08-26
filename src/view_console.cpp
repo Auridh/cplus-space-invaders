@@ -52,10 +52,18 @@ void ConsoleView::setupView() {
 void ConsoleView::draw() {
     // Show points of player
     mvwprintw(window, 1, model->getGameWidth() / 2 / 2, "Score: %i  Level: %i", model->getScore(), model->getLevel());
-    mvwprintw(window, 2, model->getGameWidth() / 2 / 2, "Health: %i", model->getPlayer()->getHealth());
+    mvwprintw(window, 2, model->getGameWidth() / 2 - 4, "Health: %i", model->getPlayer()->getHealth());
+    if (model->getTicksUntilNextLevel() > 0)
+        mvwprintw(
+            window,
+            (model->getGameHeight() + 2) / 2,
+            model->getGameWidth() / 2 - 7,
+            "Next Level in %i",
+            model->getTicksUntilNextLevel() / 20 + 1);
+
     // Draw different objects.
     drawObject(model->getPlayer());
-    drawObjects(model->getAliens());
+    drawObjects(model->getAliveAliens());
     drawObjects(model->getProjectiles());
     drawObjects(model->getExplosions());
 };

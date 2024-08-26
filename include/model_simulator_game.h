@@ -39,12 +39,13 @@ class Alien : public Drawable {
     using Drawable::Drawable;
     wchar_t texture = 'Y';
     int color = 5;
-    bool dead = false;
+    bool dead = true;
 public:
     int getColor() override;
     wchar_t getTexture() override;
     bool isDead();
     void kill();
+    void revivify(int x, int y);
 };
 
 class Explosion : public Drawable {
@@ -84,12 +85,14 @@ public:
     int getScore();
 
     Player* getPlayer();
-    std::vector<std::vector<Alien*>> getAliens();
+    std::vector<std::vector<Alien*>> getAliveAliens();
     std::vector<Projectile*> getProjectiles();
     std::vector<Explosion*> getExplosions();
+    int getTicksUntilNextLevel();
 
     // create all aliens according to the current level
     void createAliens();
+    void spawnAliens();
     // add objects to the game world
     void addProjectile(Projectile* projectile);
     void addExplosion(Explosion* explosion);
@@ -109,6 +112,7 @@ private:
     int level = 1, score = 0;
     // time measurement
     int ticks = 0;
+    int ticksUntilNextLevel = 60;
 
     // game objects
     Player player;
@@ -127,6 +131,9 @@ private:
     void deleteExplosion(Explosion* explosion);
     // check for object collisions
     void checkCollisions();
+    // leveln
+    void checkNextLevel();
+    void startNextLevel();
 };
 
 #endif

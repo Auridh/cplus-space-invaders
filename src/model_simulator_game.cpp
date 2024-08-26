@@ -1,5 +1,6 @@
 #include "model_simulator_game.h"
 
+#include <cmath>
 #include <cstdlib>
 #include <ncurses.h>
 #include <bits/algorithmfwd.h>
@@ -59,7 +60,11 @@ void Alien::kill() {
     dead = true;
 }
 
-
+void Alien::revivify(int x, int y) {
+    dead = false;
+    setX(x);
+    setY(y);
+}
 
 
 // Explosion implementation
@@ -136,7 +141,7 @@ int GameModel::getScore() {
 Player* GameModel::getPlayer() {
     return &player;
 };
-std::vector<std::vector<Alien*>> GameModel::getAliens() {
+std::vector<std::vector<Alien*>> GameModel::getAliveAliens() {
     std::vector<std::vector<Alien*>> alive = {};
 
     for (auto & alienRow : aliens) {
@@ -157,6 +162,10 @@ std::vector<Explosion *> GameModel::getExplosions() {
     return explosions;
 }
 
+int GameModel::getTicksUntilNextLevel() {
+    return ticksUntilNextLevel;
+}
+
 void GameModel::createAliens() {
     for(int i = 0; i < 6; i++) {
         std::vector<Alien*> row = {};
@@ -164,14 +173,19 @@ void GameModel::createAliens() {
 
         for(int j = 0; j < (uneven ? 9 : 8); j++) {
             auto alien = new Alien();
-            alien->setX(j * 4 + (uneven ? 2 : 4));
-            alien->setY(i * 2 + 6);
             row.push_back(alien);
         }
 
         aliens.push_back(row);
     }
 };
+void GameModel::spawnAliens() {
+    for (int i = 0; i < aliens.size(); i++) {
+        bool uneven = i % 2 == 0;
+        for(int j = 0; j < (uneven ? 9 : 8); j++)
+            aliens[i][j]->revivify(j * 4 + (uneven ? 2 : 4), i * 2 + 6);
+    }
+}
 void GameModel::addProjectile(Projectile* projectile)
 {
     projectiles.push_back(projectile);
@@ -197,7 +211,7 @@ void GameModel::control_player(wchar_t ch)
     {
         player.setX(player.getX() + 1);
     }
-    if (ch==' ')
+    if (ch==' ' && ticksUntilNextLevel == 0)
     {
         addProjectile(
             new Projectile(
@@ -211,15 +225,26 @@ void GameModel::control_player(wchar_t ch)
 void GameModel::simulate_game_step()
 {
     ticks++;
+
     // Implement game dynamics.
     notifyUpdate();
 
     updateProjectiles();
     checkCollisions();
     updateExplosions();
+
+    if (ticksUntilNextLevel > 0) {
+        ticksUntilNextLevel--;
+        if (ticksUntilNextLevel == 0) {
+            spawnAliens();
+            ticks = 0;
+        }
+        return;
+    }
+
     updateAliens();
 
-    if (ticks / 40 == 8) {
+    if (ticks / 80 == 8) {
         ticks = 0;
     }
 }
@@ -227,7 +252,7 @@ void GameModel::simulate_game_step()
 // private game model functions
 void GameModel::updateAliens()
 {
-    int step = ticks / 40;
+    int step = ticks / 80;
     for (int i = 0; i < aliens.size(); i++) {
         for (int j = 0; j < aliens[i].size(); j++) {
             if (aliens[i][j]->isDead())
@@ -238,7 +263,7 @@ void GameModel::updateAliens()
                 || (aliens[i+2][j]->isDead()
                     && (i+4 >= aliens.size()
                     || aliens[i+4][j]->isDead()))) {
-                bool shoot = rand() % 1001 < 1 * level;
+                bool shoot = rand() % 1001 < 2 * level;
                 if (shoot)
                     addProjectile(new Projectile(
                         aliens[i][j]->getX(),
@@ -247,8 +272,8 @@ void GameModel::updateAliens()
                         5));
             }
 
-            // movement every 40 ticks
-            if (ticks % 40 == 0) {
+            // movement every 80 ticks
+            if (ticks % 80 == 0) {
                 if (step == 0 || step == 4 || step == 8) {
                     aliens[i][j]->setY(aliens[i][j]->getY() + 1);
                     continue;
@@ -302,6 +327,7 @@ void GameModel::hitAlien(Alien *alien) {
     score += 1 * level;
     addExplosion(new Explosion(alien->getX(), alien->getY()));
     deleteAlien(alien);
+    checkNextLevel();
 }
 
 void GameModel::hitProjectile(Projectile *projectile) {
@@ -369,3 +395,19 @@ void GameModel::checkCollisions() {
         hitProjectile(projectile);
     }
 }
+
+void GameModel::checkNextLevel() {
+    auto alive = getAliveAliens();
+    for (auto & row : alive)
+        if (!row.empty())
+            return;
+
+    startNextLevel();
+}
+
+void GameModel::startNextLevel() {
+    level++;
+    ticks = 0;
+    ticksUntilNextLevel = 60;
+}
+

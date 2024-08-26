@@ -11,7 +11,7 @@ int main() {
     while (ch != 'q') {
         ch = controller->getInput();
         game->simulate_game_step();
-        napms(50);
+        napms(25);
     }
 
     delete controller;
