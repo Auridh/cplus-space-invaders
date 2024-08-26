@@ -12,9 +12,6 @@ class ConsoleView : public Observer
 {
     // Pointer variable of GameModel class
     GameModel* model;
-
-    // Wall texture character
-    char wallTexture = 'X';
     // Window
     WINDOW* window;
 

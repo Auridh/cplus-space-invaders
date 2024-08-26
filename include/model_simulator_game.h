@@ -2,9 +2,6 @@
 #ifndef MODEL_GAME_H_
 #define MODEL_GAME_H_
 
-// include header file for the Observable class
-#include "observer.h"
-
 // Super class vor all game objects
 class Drawable {
 public:

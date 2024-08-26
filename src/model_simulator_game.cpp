@@ -1,10 +1,5 @@
 #include "model_simulator_game.h"
 
-#include <cmath>
-#include <cstdlib>
-#include <ncurses.h>
-#include <bits/algorithmfwd.h>
-
 // Drawable implementation
 Drawable::Drawable(int x, int y) : x(x), y(y) {}
 
