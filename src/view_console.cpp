@@ -1,5 +1,6 @@
 #include "view_console.h"
 #include <ncurses.h>
+#include <string>
 
 ConsoleView::ConsoleView(GameModel *model) {
     this->model = model;
@@ -51,7 +52,8 @@ void ConsoleView::setupView() {
 
 void ConsoleView::draw() {
     // Show points of player
-    mvwprintw(window, 1, model->getGameWidth() / 2 / 2, "Score: %i  Level: %i", model->getScore(), model->getLevel());
+    auto scoreText = "Score: " + std::to_string(model->getScore()) + "  Level: " + std::to_string(model->getLevel());
+    mvwprintw(window, 1, model->getGameWidth() / 2 - scoreText.length() / 2, scoreText.c_str());
     mvwprintw(window, 2, model->getGameWidth() / 2 - 4, "Health: %i", model->getPlayer()->getHealth());
     if (model->getTicksUntilNextLevel() > 0)
         mvwprintw(
