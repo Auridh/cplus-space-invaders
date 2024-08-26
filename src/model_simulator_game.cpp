@@ -249,6 +249,7 @@ void GameModel::updateExplosions() {
 }
 
 void GameModel::hitAlien(Alien *alien) {
+    score += 1 * level;
     addExplosion(new Explosion(alien->getX(), alien->getY()));
     deleteAlien(alien);
 }

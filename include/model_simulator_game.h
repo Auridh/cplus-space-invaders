@@ -26,7 +26,7 @@ private:
 class Player : public Drawable {
     using Drawable::Drawable;
     wchar_t texture = 'A';
-    int color = 2;
+    int color = 5;
 public:
     int getColor() override;
     wchar_t getTexture() override;
@@ -57,7 +57,7 @@ class Projectile : public Drawable {
     using Drawable::Drawable;
     int velocity = 1;
     wchar_t texture = '.';
-    int color = 2;
+    int color = 5;
 public:
     Projectile(int x, int y, int velocity);
     int getVelocity();
