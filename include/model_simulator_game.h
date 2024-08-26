@@ -39,9 +39,12 @@ class Alien : public Drawable {
     using Drawable::Drawable;
     wchar_t texture = 'Y';
     int color = 1;
+    bool dead = false;
 public:
     int getColor() override;
     wchar_t getTexture() override;
+    bool isDead();
+    void kill();
 };
 
 class Explosion : public Drawable {
@@ -81,7 +84,7 @@ public:
     int getScore();
 
     Player* getPlayer();
-    std::vector<std::vector<Alien*>>* getAliens();
+    std::vector<std::vector<Alien*>> getAliens();
     std::vector<Projectile*> getProjectiles();
     std::vector<Explosion*> getExplosions();
 
@@ -114,7 +117,7 @@ private:
     std::vector<Explosion*> explosions = {};
 
     // update game objects
-    void updateAliens(int step);
+    void updateAliens();
     void updateProjectiles();
     void updateExplosions();
     void hitAlien(Alien* alien);

@@ -1,4 +1,6 @@
 #include "model_simulator_game.h"
+
+#include <cstdlib>
 #include <ncurses.h>
 #include <bits/algorithmfwd.h>
 
@@ -50,6 +52,14 @@ int Alien::getColor() {
 wchar_t Alien::getTexture() {
     return texture;
 }
+bool Alien::isDead() {
+    return dead;
+}
+void Alien::kill() {
+    dead = true;
+}
+
+
 
 
 // Explosion implementation
@@ -126,8 +136,19 @@ int GameModel::getScore() {
 Player* GameModel::getPlayer() {
     return &player;
 };
-std::vector<std::vector<Alien*>>* GameModel::getAliens() {
-    return &aliens;
+std::vector<std::vector<Alien*>> GameModel::getAliens() {
+    std::vector<std::vector<Alien*>> alive = {};
+
+    for (auto & alienRow : aliens) {
+        std::vector<Alien*> newRow = {};
+        for (auto & alien : alienRow) {
+            if (!alien->isDead())
+                newRow.push_back(alien);
+        }
+        alive.push_back(newRow);
+    }
+
+    return alive;
 };
 std::vector<Projectile*> GameModel::getProjectiles() {
     return projectiles;
@@ -137,7 +158,6 @@ std::vector<Explosion *> GameModel::getExplosions() {
 }
 
 void GameModel::createAliens() {
-    // TODO: Implement levels
     for(int i = 0; i < 6; i++) {
         std::vector<Alien*> row = {};
         bool uneven = i % 2 == 0;
@@ -183,7 +203,7 @@ void GameModel::control_player(wchar_t ch)
             new Projectile(
                 player.getX(),
                 player.getY()-1,
-                -2));
+                -5));
     }
 };
 
@@ -196,33 +216,48 @@ void GameModel::simulate_game_step()
     updateProjectiles();
     checkCollisions();
     updateExplosions();
+    updateAliens();
 
-    // aliens only move every 40 ticks
-    if (ticks % 40 == 0) {
-        updateAliens(ticks / 40);
-        if (ticks / 40 == 8) {
-            ticks = 0;
-        }
+    if (ticks / 40 == 8) {
+        ticks = 0;
     }
 }
 
 // private game model functions
-void GameModel::updateAliens(int step)
+void GameModel::updateAliens()
 {
-    for (auto & alienRow : aliens) {
-        for (auto & alien : alienRow) {
-            if (!alien)
+    int step = ticks / 40;
+    for (int i = 0; i < aliens.size(); i++) {
+        for (int j = 0; j < aliens[i].size(); j++) {
+            if (aliens[i][j]->isDead())
                 continue;
-            if (step == 0 || step == 4 || step == 8) {
-                alien->setY(alien->getY() + 1);
-                continue;
+
+            // projectiles
+            if (i >= aliens.size() - 2
+                || (aliens[i+2][j]->isDead()
+                    && (i+4 >= aliens.size()
+                    || aliens[i+4][j]->isDead()))) {
+                bool shoot = rand() % 1001 < 1 * level;
+                if (shoot)
+                    addProjectile(new Projectile(
+                        aliens[i][j]->getX(),
+                        aliens[i][j]->getY()+1,
+                        1+level));
             }
-            if (step <= 3) {
-                alien->setX(alien->getX() + 1);
-                continue;
-            }
-            if (step <= 7) {
-                alien->setX(alien->getX() - 1);
+
+            // movement every 40 ticks
+            if (ticks % 40 == 0) {
+                if (step == 0 || step == 4 || step == 8) {
+                    aliens[i][j]->setY(aliens[i][j]->getY() + 1);
+                    continue;
+                }
+                if (step <= 3) {
+                    aliens[i][j]->setX(aliens[i][j]->getX() + 1);
+                    continue;
+                }
+                if (step <= 7) {
+                    aliens[i][j]->setX(aliens[i][j]->getX() - 1);
+                }
             }
         }
     }
@@ -273,11 +308,8 @@ void GameModel::hitProjectile(Projectile *projectile) {
 }
 
 void GameModel::deleteAlien(Alien *alien) {
-    if(!alien) return;
-    for (auto & alienRow : aliens) {
-        std::erase(alienRow, alien);
-    }
-    delete alien;
+    if(alien->isDead()) return;
+    alien->kill();
 }
 
 void GameModel::deleteProjectile(Projectile *projectile) {
@@ -293,7 +325,6 @@ void GameModel::deleteExplosion(Explosion *explosion) {
 }
 
 void GameModel::checkCollisions() {
-    std::vector<Alien*> toRemoveAliens = {};
     std::vector<Projectile*> toRemoveProjectiles = {};
     std::vector<Projectile*> toRemoveProjectilesAlienProjectileCase = {};
 
@@ -303,11 +334,11 @@ void GameModel::checkCollisions() {
             // Trifft es ein Alien?
             for (auto & alienRow : aliens) {
                 for (auto & alien : alienRow) {
-                    if(alien
+                    if(!alien->isDead()
                         && alien->getX() == projectile->getX()
                         && alien->getY() == projectile->getY()) {
                         toRemoveProjectiles.push_back(projectile);
-                        toRemoveAliens.push_back(alien);
+                        hitAlien(alien);
                     }
                 }
             }
@@ -324,9 +355,6 @@ void GameModel::checkCollisions() {
             // Projektile vom Alien
             // TODO:
         }
-    }
-    for (auto & alien : toRemoveAliens) {
-        hitAlien(alien);
     }
     for (auto & projectile : toRemoveProjectiles) {
         deleteProjectile(projectile);

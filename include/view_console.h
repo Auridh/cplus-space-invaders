@@ -22,7 +22,7 @@ class ConsoleView : public Observer
     void drawObject(Drawable* drawable);
     template<class T> void drawObjects(const std::vector<T*>& drawables)
         requires(std::is_base_of_v<Drawable, T>);
-    template<class T> void drawObjects(std::vector<std::vector<T*>>* drawables)
+    template<class T> void drawObjects(std::vector<std::vector<T*>> drawables)
         requires(std::is_base_of_v<Drawable, T>);
 
 public:

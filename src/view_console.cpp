@@ -84,10 +84,10 @@ requires (std::is_base_of_v<Drawable, T>)
 }
 
 template<class T>
-void ConsoleView::drawObjects(std::vector<std::vector<T*>>* drawables)
+void ConsoleView::drawObjects(std::vector<std::vector<T*>> drawables)
 requires (std::is_base_of_v<Drawable, T>)
 {
-    for (auto &row: *drawables) {
+    for (auto &row: drawables) {
         drawObjects(row);
     }
 }
