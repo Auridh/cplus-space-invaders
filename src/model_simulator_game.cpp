@@ -54,6 +54,31 @@ void Player::kill() {
     health = 0;
 }
 
+int Player::getPowerUpTime() {
+    return powerUpTime;
+}
+
+
+void Player::takePowerUp(short type) {
+    switch (type) {
+        case 0:
+            // PowerUpTime in ticks
+            powerUpTime = 120;
+            break;
+        default:
+            health++;
+            break;
+    }
+
+}
+
+void Player::decreasePowerUpTime() {
+    if(powerUpTime == 0) {
+        return;
+    }
+    powerUpTime--;
+}
+
 
 // Alien implementation
 int Alien::getColor() {
@@ -128,6 +153,32 @@ void Projectile::setVelocity(int velocity) {
 }
 
 
+short PowerUp::getType() {
+    return type;
+}
+
+void PowerUp::setType(short type) {
+    this->type = type;
+    switch (type) {
+        case 1:
+            texture = '+';
+            color = 2;
+            break;
+        default:
+            texture = '$';
+            color = 4;
+            break;
+    }
+}
+
+int PowerUp::getColor() {
+    return color;
+}
+
+wchar_t PowerUp::getTexture() {
+    return texture;
+}
+
 // Game model implementation
 GameModel::GameModel() : player(width/2, height-1)
 {
@@ -149,6 +200,10 @@ int GameModel::getScore() {
 
 Player* GameModel::getPlayer() {
     return &player;
+}
+
+PowerUp * GameModel::getPowerUp() {
+    return powerUp;
 };
 std::vector<std::vector<Alien*>> GameModel::getAliveAliens() {
     std::vector<std::vector<Alien*>> alive = {};
@@ -228,6 +283,24 @@ void GameModel::control_player(wchar_t ch)
                 player.getY()-1,
                 -5,
                 1));
+
+        // If PowerUp activated
+        if(player.getPowerUpTime() > 0) {
+
+            addProjectile(
+            new Projectile(
+                player.getX()-1,
+                player.getY()-1,
+                -5,
+                1));
+
+            addProjectile(
+            new Projectile(
+                player.getX()+1,
+                player.getY()-1,
+                -5,
+                1));
+        }
     }
 };
 
@@ -245,6 +318,8 @@ void GameModel::simulate_game_step()
     updateProjectiles();
     checkCollisions();
     updateExplosions();
+    spawnPowerUp();
+    player.decreasePowerUpTime();
 
     if (ticksUntilNextLevel > 0) {
         ticksUntilNextLevel--;
@@ -372,7 +447,29 @@ void GameModel::deleteExplosion(Explosion *explosion) {
     delete explosion;
 }
 
+void GameModel::spawnPowerUp() {
+    bool spawn = rand() % 1001 < 2;
+    if (spawn) {
+        int x = rand() % 38 + 1;
+        if(powerUp) {
+            powerUp->setX(x);
+            powerUp->setType(x % 2);
+            return;
+        }
+        powerUp = new PowerUp(x, player.getY());
+        powerUp->setType(x % 2);
+    }
+}
+
 void GameModel::checkCollisions() {
+    // Check collisions Player with PowerUp
+    if(powerUp && player.getX() == powerUp->getX()) {
+        player.takePowerUp(powerUp->getType());
+        delete powerUp;
+        powerUp = nullptr;
+    }
+
+    // Check collisions projectiles
     std::vector<Projectile*> toRemoveProjectiles = {};
     std::vector<Projectile*> toRemoveProjectilesAlienProjectileCase = {};
 
@@ -428,7 +525,7 @@ void GameModel::checkNextLevel() {
 void GameModel::startNextLevel() {
     level++;
     ticks = 0;
-    ticksUntilNextLevel = 60;
+    ticksUntilNextLevel = 120;
 }
 
 void GameModel::gameOver() {
@@ -440,8 +537,9 @@ void GameModel::gameOver() {
         }
     }
 
+    score = 0;
     level = 1;
     ticks = 0;
-    ticksUntilNextLevel = 120;
+    ticksUntilNextLevel = 240;
 }
 

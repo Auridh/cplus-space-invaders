@@ -28,6 +28,7 @@ class Player : public Drawable {
     wchar_t texture = 'A';
     int color = 1;
     int health = 3;
+    int powerUpTime = 0;
 public:
     int getColor() override;
     wchar_t getTexture() override;
@@ -35,6 +36,9 @@ public:
     void decreaseHealth();
     void resetHealth();
     void kill();
+    int getPowerUpTime();
+    void takePowerUp(short type);
+    void decreasePowerUpTime();
 };
 
 class Alien : public Drawable {
@@ -75,6 +79,18 @@ public:
     void setVelocity(int value);
 };
 
+class PowerUp : public Drawable {
+    using Drawable::Drawable;
+    short type = 0;
+    wchar_t texture = '$';
+    int color = 4;
+public:
+    short getType();
+    void setType(short type);
+    int getColor() override;
+    wchar_t getTexture() override;
+};
+
 
 // Game class inherits from Observable class
 class GameModel : public Observable {
@@ -87,6 +103,7 @@ public:
     int getScore();
 
     Player* getPlayer();
+    PowerUp* getPowerUp();
     std::vector<std::vector<Alien*>> getAliveAliens();
     std::vector<Projectile*> getProjectiles();
     std::vector<Explosion*> getExplosions();
@@ -114,10 +131,11 @@ private:
     int level = 1, score = 0;
     // time measurement
     int ticks = 0;
-    int ticksUntilNextLevel = 60;
+    int ticksUntilNextLevel = 120;
 
     // game objects
     Player player;
+    PowerUp* powerUp;
     std::vector<std::vector<Alien*>> aliens = {};
     std::vector<Projectile*> projectiles = {};
     std::vector<Explosion*> explosions = {};
@@ -131,6 +149,7 @@ private:
     void deleteAlien(Alien* alien);
     void deleteProjectile(Projectile* projectile);
     void deleteExplosion(Explosion* explosion);
+    void spawnPowerUp();
     // check for object collisions
     void checkCollisions();
     // leveln

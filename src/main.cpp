@@ -1,8 +1,13 @@
+#include <cstddef>
+#include <cstdlib>
+#include <ctime>
+
 #include "model_simulator_game.h"
 #include "view_console.h"
 #include "controller_console.h"
 
 int main() {
+    srand(time(NULL));
     auto* game = new GameModel();
     auto* view = new ConsoleView(game);
     auto* controller = new ConsoleController(game, view);
