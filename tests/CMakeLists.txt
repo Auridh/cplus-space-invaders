@@ -17,6 +17,7 @@ file(GLOB all_SRCS
         "${PROJECT_SOURCE_DIR}/src/model_simulator_game.cpp"
         "${PROJECT_SOURCE_DIR}/src/observer.cpp"
         "${PROJECT_SOURCE_DIR}/src/view_console.cpp"
+        "${PROJECT_SOURCE_DIR}/src/GameModel.cpp"
 )
 add_executable(test test_call.cpp ${all_SRCS})
 

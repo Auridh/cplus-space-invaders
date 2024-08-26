@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_GAME_H_ // header guard to prevent multiple includes
 #define CONTROLLER_GAME_H_
 
-#include "model_simulator_game.h" // include the Game Model header file
+#include "GameModel.h"
 #include "view_console.h"
 
 class Controller

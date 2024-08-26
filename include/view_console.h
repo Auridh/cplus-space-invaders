@@ -2,6 +2,8 @@
 #pragma once
 
 #include <ncurses.h>
+
+#include "GameModel.h"
 #include "observer.h"
 #include "model_simulator_game.h"
 

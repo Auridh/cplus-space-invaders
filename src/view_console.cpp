@@ -54,16 +54,16 @@ void ConsoleView::draw() {
     // Show points of player
     auto scoreText = "Score: " + std::to_string(model->getScore()) + "  Level: " + std::to_string(model->getLevel());
     mvwprintw(window, 1, model->getGameWidth() / 2 - scoreText.length() / 2, scoreText.c_str());
-    if(model->getTicksUntilNextLevel() > 121 || model->getTicksUntilNextLevel() <= 0)
+    if(model->getTimeout() > model->LEVEL_TIMEOUT + 1 || model->getTimeout() == 0)
         mvwprintw(window, 2, model->getGameWidth() / 2 - 4, "Health: %i", model->getPlayer()->getHealth());
-    if (model->getTicksUntilNextLevel() > 0 && model->getTicksUntilNextLevel() < 121)
+    if (model->getTimeout() > 0 && model->getTimeout() < model->LEVEL_TIMEOUT + 1)
         mvwprintw(
             window,
             (model->getGameHeight() + 2) / 2,
             model->getGameWidth() / 2 - 7,
             "Next Level in %i",
-            model->getTicksUntilNextLevel() / 40 + 1);
-    else if (model->getTicksUntilNextLevel() > 120)
+            model->getTimeout() / 40 + 1);
+    else if (model->getTimeout() > model->LEVEL_TIMEOUT)
         mvwprintw(
             window,
             (model->getGameHeight() + 2) / 2,
