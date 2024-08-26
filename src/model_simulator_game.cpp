@@ -42,7 +42,12 @@ int Player::getHealth() {
 }
 
 void Player::decreaseHealth() {
-    health--;
+    if(health > 0)
+        health--;
+}
+
+void Player::resetHealth() {
+    health = 3;
 }
 
 
@@ -224,6 +229,10 @@ void GameModel::control_player(wchar_t ch)
 
 void GameModel::simulate_game_step()
 {
+    if(player.getHealth() <= 0 && ticksUntilNextLevel == 0) {
+        gameOver();
+    }
+
     ticks++;
 
     // Implement game dynamics.
@@ -238,6 +247,9 @@ void GameModel::simulate_game_step()
         if (ticksUntilNextLevel == 0) {
             spawnAliens();
             ticks = 0;
+
+            if (player.getHealth() <= 0)
+                player.resetHealth();
         }
         return;
     }
@@ -409,5 +421,17 @@ void GameModel::startNextLevel() {
     level++;
     ticks = 0;
     ticksUntilNextLevel = 60;
+}
+
+void GameModel::gameOver() {
+    for (auto & alienRow : aliens) {
+        for (auto & alien : alienRow) {
+            deleteAlien(alien);
+        }
+    }
+
+    level = 1;
+    ticks = 0;
+    ticksUntilNextLevel = 120;
 }
 

@@ -33,6 +33,7 @@ public:
     wchar_t getTexture() override;
     int getHealth();
     void decreaseHealth();
+    void resetHealth();
 };
 
 class Alien : public Drawable {
@@ -134,6 +135,7 @@ private:
     // leveln
     void checkNextLevel();
     void startNextLevel();
+    void gameOver();
 };
 
 #endif
