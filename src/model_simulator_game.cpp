@@ -77,7 +77,7 @@ void Explosion::increaseExplosionState() {
     state++;
     switch (state) {
         case 1:
-            color = 2;
+            color = 4;
             texture = '*';
             break;
         case 2:
@@ -95,8 +95,8 @@ void Explosion::increaseExplosionState() {
 
 
 // Projectile implementation
-Projectile::Projectile(int x, int y, int velocity)
-    : Drawable(x, y), velocity(velocity)
+Projectile::Projectile(int x, int y, int velocity, int color)
+    : Drawable(x, y), velocity(velocity), color(color)
 {};
 
 int Projectile::getVelocity() {
@@ -203,7 +203,8 @@ void GameModel::control_player(wchar_t ch)
             new Projectile(
                 player.getX(),
                 player.getY()-1,
-                -5));
+                -5,
+                1));
     }
 };
 
@@ -242,7 +243,8 @@ void GameModel::updateAliens()
                     addProjectile(new Projectile(
                         aliens[i][j]->getX(),
                         aliens[i][j]->getY()+1,
-                        1+level));
+                        1+level,
+                        5));
             }
 
             // movement every 40 ticks
@@ -271,7 +273,7 @@ void GameModel::updateProjectiles()
         if (ticks % projectile->getVelocity() == 0) {
             continue;
         }
-        if (projectile->getY() <= 5 || projectile->getY() >= 30) {
+        if (projectile->getY() <= 5 || projectile->getY() >= 26) {
             toRemove.push_back(projectile);
             continue;
         }
@@ -353,7 +355,11 @@ void GameModel::checkCollisions() {
             }
         } else {
             // Projektile vom Alien
-            // TODO:
+            if(projectile->getY() == player.getY()
+                            && projectile->getX() == player.getX()) {
+                toRemoveProjectilesAlienProjectileCase.push_back(projectile);
+                player.decreaseHealth();
+            }
         }
     }
     for (auto & projectile : toRemoveProjectiles) {
