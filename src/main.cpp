@@ -12,7 +12,7 @@ int main() {
     srand(time(nullptr));
 
     // create the main game objects
-    auto* game = new game_model();
+    auto* game = new GameModel();
     auto* view = new ConsoleView(game);
     auto* controller = new ConsoleController(game, view);
 

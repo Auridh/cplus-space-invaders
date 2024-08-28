@@ -7,7 +7,7 @@ BOOST_AUTO_TEST_SUITE(GameModelTests);
 
 BOOST_AUTO_TEST_CASE(ScoreIncrease)
 {
-    auto game = new game_model();
+    auto game = new GameModel();
     // at the start the score should be zero
     BOOST_CHECK_EQUAL(game->INITIAL_SCORE, game->getScore());
     game->increaseScore(17);
@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_CASE(ScoreIncrease)
 
 BOOST_AUTO_TEST_CASE(LevelIncrease)
 {
-    auto game = new game_model();
+    auto game = new GameModel();
     // at the start the level should be one
     BOOST_CHECK_EQUAL(game->INITIAL_LEVEL, game->getLevel());
     game->increaseLevel();
@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(LevelIncrease)
 
 BOOST_AUTO_TEST_CASE(GameOver)
 {
-    auto game = new game_model();
+    auto game = new GameModel();
 
     // check that all values are set as expected
     BOOST_CHECK_EQUAL(game->INITIAL_SCORE, game->getScore());

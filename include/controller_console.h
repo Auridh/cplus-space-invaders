@@ -14,11 +14,11 @@ public:
 
 class ConsoleController : public Controller // derive ConsoleController class from the Controller base class
 {
-    game_model* model; // pointer to the GameModel object
+    GameModel* model; // pointer to the GameModel object
     ConsoleView* view;
 
 public:
-    ConsoleController(game_model* model, ConsoleView* view); // constructor that takes a GameModel pointer as parameter
+    ConsoleController(GameModel* model, ConsoleView* view); // constructor that takes a GameModel pointer as parameter
 
     wchar_t getInput() override; // override the getInput() function to get input from the console
 };

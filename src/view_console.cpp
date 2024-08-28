@@ -3,7 +3,7 @@
 #include <string>
 
 // console view constructor
-ConsoleView::ConsoleView(game_model *model) {
+ConsoleView::ConsoleView(GameModel *model) {
     this->model = model;
     this->model->addObserver(this);
     setupView();

@@ -12,7 +12,7 @@
 class ConsoleView : public Observer
 {
     // Pointer variable of GameModel class
-    game_model* model;
+    GameModel* model;
     // Game window
     WINDOW* window;
 
@@ -30,7 +30,7 @@ class ConsoleView : public Observer
 
 public:
     // constructor taking the game model as an argument
-    explicit ConsoleView(game_model* model);
+    explicit ConsoleView(GameModel* model);
     // destructor
     ~ConsoleView() override;
 
