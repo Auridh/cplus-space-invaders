@@ -28,7 +28,7 @@ You will have to start all over again.
 First make sure you have all required packages installed:  
 
 For Debian based distributions run  
-``sudo apt install gcc g++ make libncurses libncurses-devel``
+``sudo apt install gcc g++ make libncurses-devel``
 
 For Arch run  
 ``sudo pacman -S gcc make ncurses``
