@@ -121,11 +121,11 @@ void GameModel::increaseLevel() {
 
 void GameModel::control_player(wchar_t ch)
 {
-    if (ch==KEY_LEFT && player.getX() > 1)
+    if ((ch == 'a' || ch==KEY_LEFT) && player.getX() > 1)
     {
         player.setX(player.getX() - 1);
     }
-    if (ch==KEY_RIGHT && player.getX() < width - 2)
+    if ((ch == 'd' || ch==KEY_RIGHT) && player.getX() < width - 2)
     {
         player.setX(player.getX() + 1);
     }
