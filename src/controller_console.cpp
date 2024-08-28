@@ -51,10 +51,12 @@ wchar_t AutomatedController::getInput() {
         break;
     }
 
+    // if a powerup is available get it first
     int playerOffset = model->getGameWidth();
     if (model->getPowerUp()) {
         playerOffset = model->getPowerUp()->getX() - player->getX();
     } else {
+        // else look for the nearest alien
         auto aliens = model->getAliveAliens();
         for (auto & alienRow : aliens) {
             for (short i = alienRow.size() - 1; i >= 0; i--) {
@@ -67,9 +69,10 @@ wchar_t AutomatedController::getInput() {
         }
     }
 
+    // prioritize shooting at incoming projectiles
     if (shoot)
         model->playerShoot();
-    // move the player in the determined direction
+    // else move the player in the determined direction
     else if (playerOffset != 0 && playerOffset != model->getGameWidth())
         player->setX(player->getX() + (playerOffset > 0 ? 1 : -1));
 
