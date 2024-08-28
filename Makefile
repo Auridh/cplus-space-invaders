@@ -12,7 +12,7 @@ LDLIBS = -lncurses -lboost_unit_test_framework
 
 SRCDIR := ./src
 TESTDIR := ./tests
-GAME_OBJECTS := controller_console.o model_simulator_game.o observer.o view_console.o game_model.o
+GAME_OBJECTS := controller_console.o drawable.o observer.o view_console.o game_model.o
 
 game: $(GAME_OBJECTS) main.o
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
