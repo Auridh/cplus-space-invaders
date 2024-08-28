@@ -15,7 +15,7 @@ This project is a implementation of **Space Invaders** in **C++** using **ncurse
 * Collect PowerUPs for special effects like
   * increasing you health
   * shooting more bullets
-* Shoot the alien ships **Y** up your score.  
+* Shoot the alien ships **Y** to up your score.  
 The value of the alien ships increases per level.
 * If you are hit by an enemy bullet, you loose one health.  
 * In case your health drops to zero or the aliens reach the bottom of the playing field, it's game over.  
