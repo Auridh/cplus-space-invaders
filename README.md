@@ -1,14 +1,14 @@
 # Space Invaders
 _by Henrik Eike Wolff, Lukas Kursitis and Johannes Severin Höping_
 
----
-
+\
+\
 This project is a implementation of **Space Invaders** in **C++** using **ncurses**.
 
 ![screenshot.png](img/screenshot.png)
 
----
-### How To Play
+
+## How To Play
 * Move the Player Character **A** by pressing
   * **A** or the **left arrow key** for moving left
   * **D** or the **right arrow key** for moving right
@@ -22,8 +22,8 @@ The value of the alien ships increases per level.
 * In case your health drops to zero or the aliens reach the bottom of the playing field, it's game over.  
 You will have to start all over again.
 
----
-### Compile and Execute the Game
+
+## Compile and Execute the Game
 
 First make sure you have all required packages installed:  
 
@@ -39,8 +39,8 @@ If all dependencies are installed you can compile and execute the game by runnin
 To remove all previous compiled files run  
 ``make clean``
 
----
-### Compile and Run Tests
+
+## Compile and Run Tests
 
 First make sure you have all required packages installed:
 
