@@ -20,6 +20,7 @@ The value of the alien ships increases per level.
 * If you are hit by an enemy bullet, you loose one health.  
 * In case your health drops to zero or the aliens reach the bottom of the playing field, it's game over.  
 You will have to start all over again.
+* De-/Activate the **automation** by pressing **S**
 
 &nbsp;
 ## Compile and Execute the Game
