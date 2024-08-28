@@ -48,11 +48,11 @@ void ConsoleView::setupView() {
     if (has_colors()) {
         use_default_colors();
         start_color();
-        init_pair(1, COLOR_WHITE, -1);
-        init_pair(2, COLOR_BLUE, -1);
-        init_pair(3, COLOR_RED, -1);
-        init_pair(4, COLOR_YELLOW, -1);
-        init_pair(5, COLOR_GREEN, -1);
+        init_pair(COLOR_WHITE, COLOR_WHITE, -1);
+        init_pair(COLOR_BLUE, COLOR_BLUE, -1);
+        init_pair(COLOR_RED, COLOR_RED, -1);
+        init_pair(COLOR_YELLOW, COLOR_YELLOW, -1);
+        init_pair(COLOR_GREEN, COLOR_GREEN, -1);
     }
 
     timeout(30);

@@ -111,15 +111,15 @@ void Explosion::increaseExplosionState() {
     state++;
     switch (state) {
         case 1:
-            color = 4;
+            color = COLOR_YELLOW;
             texture = '*';
             break;
         case 2:
-            color = 3;
+            color = COLOR_RED;
             texture = '#';
             break;
         case 3:
-            color = 4;
+            color = COLOR_YELLOW;
             texture = '@';
             break;
         default:
@@ -127,26 +127,34 @@ void Explosion::increaseExplosionState() {
     }
 }
 
-
 // Projectile implementation
 Projectile::Projectile(int x, int y, int velocity, int color)
     : Drawable(x, y), velocity(velocity), color(color)
 {};
 
-int Projectile::getVelocity() {
-    return velocity;
-}
 int Projectile::getColor() {
     return color;
 }
 wchar_t Projectile::getTexture() {
     return texture;
 }
+int Projectile::getVelocity() {
+    return velocity;
+}
 
 void Projectile::setVelocity(int velocity) {
     this->velocity = velocity;
 }
 
+
+
+int PowerUp::getColor() {
+    return color;
+}
+
+wchar_t PowerUp::getTexture() {
+    return texture;
+}
 
 short PowerUp::getType() {
     return type;
@@ -157,20 +165,12 @@ void PowerUp::setType(short type) {
     switch (type) {
         case 1:
             texture = '+';
-            color = 2;
+            color = COLOR_BLUE;
             break;
         default:
             texture = '$';
-            color = 4;
+            color = COLOR_YELLOW;
             break;
     }
-}
-
-int PowerUp::getColor() {
-    return color;
-}
-
-wchar_t PowerUp::getTexture() {
-    return texture;
 }
 

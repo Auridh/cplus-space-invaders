@@ -136,24 +136,24 @@ void GameModel::control_player(wchar_t ch)
                 player.getX(),
                 player.getY()-1,
                 -5,
-                1));
+                COLOR_WHITE));
 
         // If PowerUp activated
         if(player.getPowerUpTime() > 0) {
 
             addProjectile(
-            new Projectile(
-                player.getX()-1,
-                player.getY()-1,
-                -5,
-                1));
+                new Projectile(
+                    player.getX()-1,
+                    player.getY()-1,
+                    -5,
+                    COLOR_WHITE));
 
             addProjectile(
-            new Projectile(
-                player.getX()+1,
-                player.getY()-1,
-                -5,
-                1));
+                new Projectile(
+                    player.getX()+1,
+                    player.getY()-1,
+                    -5,
+                    COLOR_WHITE));
         }
     }
 };
@@ -216,7 +216,7 @@ void GameModel::updateAliens()
                         aliens[i][j]->getX(),
                         aliens[i][j]->getY()+1,
                         1+level,
-                        5));
+                        COLOR_GREEN));
             }
 
             // movement every TICKS_PER_ALIEN_CHANGE ticks
