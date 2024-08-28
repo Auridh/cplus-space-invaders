@@ -28,4 +28,18 @@ public:
     wchar_t getInput() override;
 };
 
+// derive ConsoleController class from the Controller base class
+class AutomatedController : public Controller
+{
+    // pointer to the GameModel object
+    GameModel* model;
+    ConsoleView* view;
+
+public:
+    // constructor that takes a GameModel pointer as parameter
+    AutomatedController(GameModel* model, ConsoleView* view);
+    // override the getInput() function to get input from the console
+    wchar_t getInput() override;
+};
+
 #endif

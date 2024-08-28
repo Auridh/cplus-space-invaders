@@ -13,12 +13,21 @@ int main() {
     // create the main game objects
     auto* game = new GameModel();
     auto* view = new ConsoleView(game);
-    auto* controller = new ConsoleController(game, view);
+    Controller* controller = new ConsoleController(game, view);
+    Controller* switchController = new AutomatedController(game, view);
 
     // the game loops until "q" is pressed
     wchar_t ch = '\0';
     while (ch != 'q') {
         ch = controller->getInput();
+
+        // switch controller if necessary
+        if (ch == 's') {
+            const auto temp = controller;
+            controller = switchController;
+            switchController = temp;
+        }
+
         game->simulate_game_step();
     }
 
