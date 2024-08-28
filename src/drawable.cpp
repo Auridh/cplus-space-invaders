@@ -1,4 +1,4 @@
-#include "model_simulator_game.h"
+#include "drawable.h"
 
 // Drawable implementation
 Drawable::Drawable(int x, int y) : x(x), y(y) {}

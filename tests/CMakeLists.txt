@@ -14,7 +14,7 @@ ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 file(GLOB all_SRCS
         "${PROJECT_SOURCE_DIR}/include/*.h"
         "${PROJECT_SOURCE_DIR}/src/controller_console.cpp"
-        "${PROJECT_SOURCE_DIR}/src/model_simulator_game.cpp"
+        "${PROJECT_SOURCE_DIR}/src/drawable.cpp"
         "${PROJECT_SOURCE_DIR}/src/observer.cpp"
         "${PROJECT_SOURCE_DIR}/src/view_console.cpp"
         "${PROJECT_SOURCE_DIR}/src/game_model.cpp"

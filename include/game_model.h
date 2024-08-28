@@ -1,7 +1,7 @@
 #ifndef GAMEMODEL_H
 #define GAMEMODEL_H
 
-#include "model_simulator_game.h"
+#include "drawable.h"
 #include "observer.h"
 
 // Game class inherits from Observable class

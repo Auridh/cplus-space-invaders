@@ -2,7 +2,6 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "model_simulator_game.h"
 #include "view_console.h"
 #include "controller_console.h"
 

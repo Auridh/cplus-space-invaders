@@ -5,7 +5,7 @@
 
 #include "game_model.h"
 #include "observer.h"
-#include "model_simulator_game.h"
+#include "drawable.h"
 
 // Inheriting from Observer class
 // Class for displaying the game in the console
