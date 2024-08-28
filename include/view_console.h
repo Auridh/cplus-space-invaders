@@ -3,7 +3,7 @@
 
 #include <ncurses.h>
 
-#include "GameModel.h"
+#include "game_model.h"
 #include "observer.h"
 #include "model_simulator_game.h"
 
@@ -11,7 +11,7 @@
 class ConsoleView : public Observer
 {
     // Pointer variable of GameModel class
-    GameModel* model;
+    game_model* model;
     // Window
     WINDOW* window;
 
@@ -25,7 +25,7 @@ class ConsoleView : public Observer
         requires(std::is_base_of_v<Drawable, T>);
 
 public:
-    explicit ConsoleView(GameModel* model);
+    explicit ConsoleView(game_model* model);
     ~ConsoleView() override;
 
     void update() override;

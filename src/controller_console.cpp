@@ -1,7 +1,7 @@
 #include "controller_console.h"
-#include "GameModel.h"
+#include "game_model.h"
 
-ConsoleController::ConsoleController(GameModel* model, ConsoleView* view) {
+ConsoleController::ConsoleController(game_model* model, ConsoleView* view) {
     this->view = view;
 	this->model = model;
 };

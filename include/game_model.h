@@ -5,7 +5,7 @@
 #include "observer.h"
 
 // Game class inherits from Observable class
-class GameModel : public Observable {
+class game_model : public Observable {
     // milliseconds per second
     const int TIME_PER_SECOND = 1000;
 public:
@@ -26,8 +26,8 @@ public:
 
     // Constructor
     // initializes the player and aliens
-    GameModel();
-    ~GameModel();
+    game_model();
+    ~game_model();
 
     // getters for global values
     int getGameWidth();

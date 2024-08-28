@@ -1,16 +1,16 @@
-#include "GameModel.h"
+#include "game_model.h"
 
 #include <cstdlib>
 #include <ncurses.h>
 
 // Game model implementation
 // constructor with initial values and alien generation
-GameModel::GameModel() : player(width/2, height-1), powerUp(nullptr)
+game_model::game_model() : player(width/2, height-1), powerUp(nullptr)
 {
     createAliens();
 }
 // Destructor freeing memory
-GameModel::~GameModel() {
+game_model::~game_model() {
     // delete aliens
     for (auto & row : aliens) {
         for (auto & alien : row) {
@@ -30,28 +30,28 @@ GameModel::~GameModel() {
 };
 
 // standard getters
-int GameModel::getGameWidth() {
+int game_model::getGameWidth() {
     return width;
 };
-int GameModel::getGameHeight() {
+int game_model::getGameHeight() {
     return height;
 };
-int GameModel::getLevel() {
+int game_model::getLevel() {
     return level;
 };
-int GameModel::getScore() {
+int game_model::getScore() {
     return score;
 };
-Player* GameModel::getPlayer() {
+Player* game_model::getPlayer() {
     return &player;
 }
 
-PowerUp * GameModel::getPowerUp() {
+PowerUp * game_model::getPowerUp() {
     return powerUp;
 };
 
 // the getAliveAliens methods filters all aliens by their isDead value
-std::vector<std::vector<Alien*>> GameModel::getAliveAliens() {
+std::vector<std::vector<Alien*>> game_model::getAliveAliens() {
     std::vector<std::vector<Alien*>> alive = {};
 
     for (auto & alienRow : aliens) {
@@ -66,20 +66,20 @@ std::vector<std::vector<Alien*>> GameModel::getAliveAliens() {
     return alive;
 };
 
-std::vector<Projectile*> GameModel::getProjectiles() {
+std::vector<Projectile*> game_model::getProjectiles() {
     return projectiles;
 };
-std::vector<Explosion *> GameModel::getExplosions() {
+std::vector<Explosion *> game_model::getExplosions() {
     return explosions;
 }
 
-int GameModel::getTimeout() {
+int game_model::getTimeout() {
     return timeoutTicks;
 }
 
 // creates aliens in six rows
 // eight per even and nine per uneven row
-void GameModel::createAliens() {
+void game_model::createAliens() {
     for(int i = 0; i < 6; i++) {
         std::vector<Alien*> row = {};
         bool uneven = i % 2 == 0;
@@ -93,7 +93,7 @@ void GameModel::createAliens() {
     }
 };
 // aliens are created "dead" but we need them alive to shoot them...
-void GameModel::spawnAliens() {
+void game_model::spawnAliens() {
     for (int i = 0; i < aliens.size(); i++) {
         bool uneven = i % 2 == 0;
         for(int j = 0; j < (uneven ? 9 : 8); j++)
@@ -101,25 +101,25 @@ void GameModel::spawnAliens() {
     }
 }
 // adds a projectile to the game
-void GameModel::addProjectile(Projectile* projectile)
+void game_model::addProjectile(Projectile* projectile)
 {
     projectiles.push_back(projectile);
 };
 // adds a explosion to the game
-void GameModel::addExplosion(Explosion *explosion) {
+void game_model::addExplosion(Explosion *explosion) {
     explosions.push_back(explosion);
 };
 
 // increase the game score
-void GameModel::increaseScore(int value) {
+void game_model::increaseScore(int value) {
     score += value;
 }
 // increase the level
-void GameModel::increaseLevel() {
+void game_model::increaseLevel() {
     level++;
 }
 
-void GameModel::control_player(wchar_t ch)
+void game_model::control_player(wchar_t ch)
 {
     if (ch==KEY_LEFT && player.getX() > 1)
     {
@@ -158,7 +158,7 @@ void GameModel::control_player(wchar_t ch)
     }
 };
 
-void GameModel::simulate_game_step()
+void game_model::simulate_game_step()
 {
     napms(TIME_PER_TICK);
 
@@ -197,7 +197,7 @@ void GameModel::simulate_game_step()
 }
 
 // private game model functions
-void GameModel::updateAliens()
+void game_model::updateAliens()
 {
     int step = ticks / TICKS_PER_ALIEN_CHANGE;
     for (int i = 0; i < aliens.size(); i++) {
@@ -241,7 +241,7 @@ void GameModel::updateAliens()
     }
 }
 
-void GameModel::updateProjectiles()
+void game_model::updateProjectiles()
 {
     std::vector<Projectile*> toRemove = {};
 
@@ -260,7 +260,7 @@ void GameModel::updateProjectiles()
     }
 }
 
-void GameModel::updateExplosions() {
+void game_model::updateExplosions() {
     std::vector<Explosion*> toRemove = {};
 
     for (auto & explosion : explosions) {
@@ -274,36 +274,36 @@ void GameModel::updateExplosions() {
     }
 }
 
-void GameModel::hitAlien(Alien *alien) {
+void game_model::hitAlien(Alien *alien) {
     score += 1 * level;
     addExplosion(new Explosion(alien->getX(), alien->getY()));
     deleteAlien(alien);
     checkNextLevel();
 }
 
-void GameModel::hitProjectile(Projectile *projectile) {
+void game_model::hitProjectile(Projectile *projectile) {
     addExplosion(new Explosion(projectile->getX(), projectile->getY()));
     deleteProjectile(projectile);
 }
 
-void GameModel::deleteAlien(Alien *alien) {
+void game_model::deleteAlien(Alien *alien) {
     if(alien->isDead()) return;
     alien->kill();
 }
 
-void GameModel::deleteProjectile(Projectile *projectile) {
+void game_model::deleteProjectile(Projectile *projectile) {
     if(!projectile) return;
     std::erase(projectiles, projectile);
     delete projectile;
 }
 
-void GameModel::deleteExplosion(Explosion *explosion) {
+void game_model::deleteExplosion(Explosion *explosion) {
     if(!explosion) return;
     std::erase(explosions, explosion);
     delete explosion;
 }
 
-void GameModel::spawnPowerUp() {
+void game_model::spawnPowerUp() {
     bool spawn = rand() % 1001 < 2;
     if (spawn) {
         int x = rand() % (width - 2) + 1;
@@ -317,7 +317,7 @@ void GameModel::spawnPowerUp() {
     }
 }
 
-void GameModel::checkCollisions() {
+void game_model::checkCollisions() {
     // Check collisions Player with PowerUp
     if(powerUp && player.getX() == powerUp->getX()) {
         player.takePowerUp(powerUp->getType());
@@ -369,7 +369,7 @@ void GameModel::checkCollisions() {
     }
 }
 
-void GameModel::checkNextLevel() {
+void game_model::checkNextLevel() {
     auto alive = getAliveAliens();
     for (auto & row : alive)
         if (!row.empty())
@@ -378,13 +378,13 @@ void GameModel::checkNextLevel() {
     startNextLevel();
 }
 
-void GameModel::startNextLevel() {
+void game_model::startNextLevel() {
     level++;
     ticks = INITIAL_TICKS;
     timeoutTicks = LEVEL_TIMEOUT;
 }
 
-void GameModel::gameOver() {
+void game_model::gameOver() {
     player.kill();
 
     for (auto & alienRow : aliens) {

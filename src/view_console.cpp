@@ -2,7 +2,7 @@
 #include <ncurses.h>
 #include <string>
 
-ConsoleView::ConsoleView(GameModel *model) {
+ConsoleView::ConsoleView(game_model *model) {
     this->model = model;
     this->model->addObserver(this);
     setupView();
