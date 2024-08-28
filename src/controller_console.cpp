@@ -61,7 +61,7 @@ wchar_t AutomatedController::getInput() {
         model->control_player(' ');
     // move the player in the determined direction
     else if (playerOffset != 0 && playerOffset != model->getGameWidth())
-        model->control_player(player->getX() + (playerOffset > 0 ? 'd' : 'a'));
+        model->control_player(playerOffset > 0 ? 'd' : 'a');
 
     // return the input
     // (required for quitting the game gracefully and switching controllers)
