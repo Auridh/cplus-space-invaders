@@ -57,7 +57,7 @@ public:
     // updates player movement direction based on keyboard input
     void playerShoot();
     // simulates one step of the game
-    void simulate_game_step();
+    void simulate_game_tick();
 
 private:
     // game width and height

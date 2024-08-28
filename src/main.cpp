@@ -28,7 +28,7 @@ int main() {
             switchController = temp;
         }
 
-        game->simulate_game_step();
+        game->simulate_game_tick();
     }
 
     // free memory

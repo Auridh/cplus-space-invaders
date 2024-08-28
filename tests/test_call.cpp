@@ -44,11 +44,11 @@ BOOST_AUTO_TEST_CASE(GameOver)
 
     // simulate the players death
     for (int i = 0; i < game->INITIAL_TIMEOUT; i++)
-        game->simulate_game_step();
+        game->simulate_game_tick();
     game->getPlayer()->decreaseHealth();
     game->getPlayer()->decreaseHealth();
     game->getPlayer()->decreaseHealth();
-    game->simulate_game_step();
+    game->simulate_game_tick();
 
     // check if the game over function was correctly executed
     BOOST_CHECK_EQUAL(game->INITIAL_SCORE, game->getScore());
