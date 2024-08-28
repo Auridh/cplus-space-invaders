@@ -46,14 +46,18 @@ wchar_t AutomatedController::getInput() {
     }
 
     int playerOffset = model->getGameWidth();
-    auto aliens = model->getAliveAliens();
-    for (auto & alienRow : aliens) {
-        for (short i = alienRow.size() - 1; i >= 0; i--) {
-            short offset = alienRow[i]->getX() - player->getX();
-            if (std::abs(offset) < std::abs(playerOffset))
-                playerOffset = offset;
-            if (alienRow[i]->getX() == player->getX())
-                shoot = true;
+    if (model->getPowerUp()) {
+        playerOffset = model->getPowerUp()->getX() - player->getX();
+    } else {
+        auto aliens = model->getAliveAliens();
+        for (auto & alienRow : aliens) {
+            for (short i = alienRow.size() - 1; i >= 0; i--) {
+                short offset = alienRow[i]->getX() - player->getX();
+                if (std::abs(offset) < std::abs(playerOffset))
+                    playerOffset = offset;
+                if (alienRow[i]->getX() == player->getX())
+                    shoot = true;
+            }
         }
     }
 
