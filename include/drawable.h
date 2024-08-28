@@ -20,8 +20,6 @@ public:
     // setters for the x and y positions
     void setX(int x);
     void setY(int y);
-    // update function executed every game step (pure virtual)
-    virtual void update() = 0;
 private:
     // x and y coordinates
     int x = 0, y = 0;
@@ -58,8 +56,6 @@ public:
     void takePowerUp(short type);
     // decrease the remaining powered up time by one tick
     void decreasePowerUpTime();
-    // update function executed every game step
-    void update() override;
 };
 
 // aliens
@@ -79,8 +75,6 @@ public:
     void kill();
     // resurrect the alien at a given position
     void revivify(int x, int y);
-    // update function executed every game step
-    void update() override;
 };
 
 // explosions
@@ -98,8 +92,6 @@ public:
     // (used for animating explosions)
     short getExplosionState();
     void increaseExplosionState();
-    // update function executed every game step
-    void update() override;
 };
 
 // projectiles
@@ -119,8 +111,6 @@ public:
     int getVelocity();
     // set the projectiles velocity
     void setVelocity(int value);
-    // update function executed every game step
-    void update() override;
 };
 
 // power-ups
@@ -137,8 +127,6 @@ public:
     // setter and getter for the projectile's type
     short getType();
     void setType(short type);
-    // update function executed every game step
-    void update() override;
 };
 
 #endif
