@@ -58,10 +58,10 @@ wchar_t AutomatedController::getInput() {
     }
 
     if (shoot)
-        model->addProjectile(new Projectile(player->getX(), player->getY()-1, -5, COLOR_WHITE));
+        model->control_player(' ');
     // move the player in the determined direction
-    if (playerOffset != 0 && playerOffset != model->getGameWidth())
-        player->setX(player->getX() + (playerOffset > 0 ? 1 : -1));
+    else if (playerOffset != 0 && playerOffset != model->getGameWidth())
+        model->control_player(player->getX() + (playerOffset > 0 ? 'd' : 'a'));
 
     // return the input
     // (required for quitting the game gracefully and switching controllers)
