@@ -55,7 +55,7 @@ public:
     void increaseLevel();
 
     // updates player movement direction based on keyboard input
-    void control_player(wchar_t ch);
+    void playerShoot();
     // simulates one step of the game
     void simulate_game_step();
 

@@ -120,17 +120,8 @@ void GameModel::increaseLevel() {
     level++;
 }
 
-void GameModel::control_player(wchar_t ch)
-{
-    if ((ch == 'a' || ch==KEY_LEFT) && player.getX() > 1)
-    {
-        player.setX(player.getX() - 1);
-    }
-    if ((ch == 'd' || ch==KEY_RIGHT) && player.getX() < width - 2)
-    {
-        player.setX(player.getX() + 1);
-    }
-    if (ch==' ' && timeoutTicks == 0)
+void GameModel::playerShoot() {
+    if (timeoutTicks == 0)
     {
         addProjectile(
             new Projectile(
@@ -157,7 +148,7 @@ void GameModel::control_player(wchar_t ch)
                     COLOR_WHITE));
         }
     }
-};
+}
 
 void GameModel::simulate_game_step()
 {

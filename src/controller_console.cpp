@@ -17,7 +17,13 @@ wchar_t ConsoleController::getInput() {
     // if the input is valid
     if (ch != ERR) {
         // process it
-        model->control_player(ch);
+        auto player = model->getPlayer();
+        if ((ch == 'a' || ch==KEY_LEFT) && player->getX() > 1)
+            player->setX(player->getX() - 1);
+        if ((ch == 'd' || ch==KEY_RIGHT) && player->getX() < model->getGameWidth() - 2)
+            player->setX(player->getX() + 1);
+        if (ch == ' ')
+            model->playerShoot();
     }
     // return the input
     // (required for quitting the game gracefully and switching controllers)
@@ -62,10 +68,10 @@ wchar_t AutomatedController::getInput() {
     }
 
     if (shoot)
-        model->control_player(' ');
+        model->playerShoot();
     // move the player in the determined direction
     else if (playerOffset != 0 && playerOffset != model->getGameWidth())
-        model->control_player(playerOffset > 0 ? 'd' : 'a');
+        player->setX(player->getX() + (playerOffset > 0 ? 1 : -1));
 
     // return the input
     // (required for quitting the game gracefully and switching controllers)
