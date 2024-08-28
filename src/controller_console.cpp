@@ -80,3 +80,12 @@ wchar_t AutomatedController::getInput() {
     // (required for quitting the game gracefully and switching controllers)
     return wgetch(view->getWindow());
 };
+
+// Wie man eine alternative Control-Möglichkeit implementieren könnte:
+//
+// Erstelle dafür zuerst eine neue Klasse, die von Controller erbt.
+// Im Falle von einem Trackpad könnten wir diese sinnvollerweise TrackpadController nennen.
+// Nun übernehmen wir den Konstruktor vom Controller und implementieren die getInput() Methode neu.
+// Dafür schauen wir nach, wie wir die Trackpad-Inputs erhalten und rufen dann abhängig von diesen
+// entweder model->playerShoot() auf oder wir ändern die Position von player bzgl. x um diesen nach
+// links oder nach rechts zu bewegen.
