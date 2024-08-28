@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <ncurses.h>
+#include <algorithm>
 
 // Game model implementation
 // constructor with initial values and alien generation
@@ -338,7 +339,11 @@ void GameModel::checkCollisions() {
                     if(!alien->isDead()
                         && alien->getX() == projectile->getX()
                         && alien->getY() == projectile->getY()) {
-                        toRemoveProjectiles.push_back(projectile);
+                        if (std::find(
+                            toRemoveProjectiles.begin(),
+                            toRemoveProjectiles.end(),
+                            projectile) == toRemoveProjectiles.end())
+                            toRemoveProjectiles.push_back(projectile);
                         hitAlien(alien);
                     }
                 }
@@ -346,17 +351,29 @@ void GameModel::checkCollisions() {
             // Trifft es ein Projektil von einem Alien?
             for (auto & projectileAlien : projectiles) {
                 if(projectileAlien->getVelocity() > 0
-                            && (projectileAlien->getY() == projectile->getY() || projectileAlien->getY() + 1 == projectile->getY())
-                            && projectileAlien->getX() == projectile->getX()) {
-                    toRemoveProjectilesAlienProjectileCase.push_back(projectile);
-                    toRemoveProjectilesAlienProjectileCase.push_back(projectileAlien);
+                    && (projectileAlien->getY() == projectile->getY() || projectileAlien->getY() + 1 == projectile->getY())
+                    && projectileAlien->getX() == projectile->getX()) {
+                    if (std::find(
+                        toRemoveProjectilesAlienProjectileCase.begin(),
+                        toRemoveProjectilesAlienProjectileCase.end(),
+                        projectile) == toRemoveProjectilesAlienProjectileCase.end())
+                        toRemoveProjectilesAlienProjectileCase.push_back(projectile);
+                    if (std::find(
+                        toRemoveProjectilesAlienProjectileCase.begin(),
+                        toRemoveProjectilesAlienProjectileCase.end(),
+                        projectileAlien) == toRemoveProjectilesAlienProjectileCase.end())
+                        toRemoveProjectilesAlienProjectileCase.push_back(projectileAlien);
                 }
             }
         } else {
             // Projektile vom Alien
             if(projectile->getY() == player.getY()
-                            && projectile->getX() == player.getX()) {
-                toRemoveProjectilesAlienProjectileCase.push_back(projectile);
+                && projectile->getX() == player.getX()) {
+                if (std::find(
+                    toRemoveProjectilesAlienProjectileCase.begin(),
+                    toRemoveProjectilesAlienProjectileCase.end(),
+                    projectile) == toRemoveProjectilesAlienProjectileCase.end())
+                    toRemoveProjectilesAlienProjectileCase.push_back(projectile);
                 player.decreaseHealth();
             }
         }
